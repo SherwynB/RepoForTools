@@ -1,0 +1,15 @@
+<html>
+<head>
+    <script>
+        console.log("First script");
+    </script>
+</head>
+<body>
+    <script>
+        console.log("Second script");
+    </script>
+    <script>
+        alert("Third script");
+    </script>
+</body>
+</html>

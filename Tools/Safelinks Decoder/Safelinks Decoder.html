@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safelinks Decoder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Safelinks Decoder</h2>
+        <label for="Safelink">Enter Safelink URL:</label>
+        <input type="text" id="Safelink" placeholder="Enter Safelink URL here">
+        <button onclick="generate_decode_url()">Decode</button>
+        <p>Decoded URL:</p>
+        <input type="text" id="target_url" readonly>
+        <p>Fanged URL:</p>
+        <input type="text" id="fanged_url" readonly>
+        <p>URL Data Parameters:</p>
+        <ul id="parameters"></ul>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

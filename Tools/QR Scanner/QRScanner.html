@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code URL Extractor</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code URL Extractor</h1>
+        <input type="file" id="qr-input" accept="image/*">
+        <p id="result"></p>
+    </div>
+
+    <canvas id="qr-canvas" style="display:none;"></canvas>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
