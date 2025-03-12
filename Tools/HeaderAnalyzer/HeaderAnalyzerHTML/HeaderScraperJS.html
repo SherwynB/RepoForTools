@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Header Analyzer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #0056b3;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #0056b3;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin: 10px 0;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            border: 2px solid #0056b3;
+            border-radius: 5px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #0056b3;
+            color: #ffffff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            text-align: left;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f9f9f9;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Email Header Analyzer</h1>
+        <p>Enter the raw email header below:</p>
+
+        <form id="email-form">
+            <textarea id="email-header" placeholder="Paste the raw email header here..." required></textarea>
+            <br>
+            <button type="submit">Analyze Header</button>
+        </form>
+
+        <h2>Parsed Email Header Information:</h2>
+        <pre id="parsed-info"></pre>
+    </div>
+
+    <script>
+        function parseEmailHeader(header) {
+            const emailRegex = {
+                from: /^From:\s*(.*)$/m,
+                to: /^To:\s*(.*)$/m,
+                subject: /^Subject:\s*(.*)$/m,
+                date: /^Date:\s*(.*)$/m,
+                messageId: /^Message-ID:\s*(.*)$/m,
+                received: /^Received:\s*(.*)$/gm,
+                authenticationResults: /^Authentication-Results:\s*(.*)$/m,
+                dkimSignature: /^DKIM-Signature:\s*(.*)$/m,
+                spf: /^Received-SPF:\s*(.*)$/m,
+                dmarc: /^DMARC-Results:\s*(.*)$/m
+            };
+
+            const parsedInfo = {
+                'From': header.match(emailRegex.from)?.[1],
+                'To': header.match(emailRegex.to)?.[1],
+                'Subject': header.match(emailRegex.subject)?.[1],
+                'Date': header.match(emailRegex.date)?.[1],
+                'Message-ID': header.match(emailRegex.messageId)?.[1],
+                'Received': [...header.matchAll(emailRegex.received)].map(match => match[1]),
+                'Authentication-Results': header.match(emailRegex.authenticationResults)?.[1],
+                'DKIM-Signature': header.match(emailRegex.dkimSignature)?.[1],
+                'SPF': header.match(emailRegex.spf)?.[1],
+                'DMARC': header.match(emailRegex.dmarc)?.[1]
+            };
+
+            const receivedHeader = parsedInfo['Received']?.[0];
+            if (receivedHeader) {
+                const ipRegex = /\[([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\]/;
+                const domainRegex = /from\s([^\s]+)\s/;
+                const senderIp = receivedHeader.match(ipRegex)?.[1];
+                const senderDomain = receivedHeader.match(domainRegex)?.[1];
+
+                parsedInfo['Sender IP'] = senderIp || 'Not found';
+                parsedInfo['Sender Domain'] = senderDomain || 'Not found';
+            }
+
+            return parsedInfo;
+        }
+
+        function displayParsedInfo(parsedInfo) {
+            let parsedText = '';
+            for (const [key, value] of Object.entries(parsedInfo)) {
+                if (Array.isArray(value)) {
+                    parsedText += `${key}:\n`;
+                    value.forEach((item, idx) => {
+                        parsedText += `  ${idx + 1}. ${item}\n`;
+                    });
+                } else if (value) {
+                    parsedText += `${key}: ${value}\n`;
+                }
+            }
+
+            document.getElementById('parsed-info').textContent = parsedText || 'No relevant information found.';
+        }
+
+        document.getElementById('email-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const emailHeader = document.getElementById('email-header').value;
+            const parsedInfo = parseEmailHeader(emailHeader);
+            displayParsedInfo(parsedInfo);
+        });
+    </script>
+
+</body>
+</html>
