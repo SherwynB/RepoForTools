@@ -1,0 +1,1 @@
+Automates the forwarding process of a known bot for artifact collection
