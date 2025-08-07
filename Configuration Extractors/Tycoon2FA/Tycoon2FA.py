@@ -1,6 +1,6 @@
 import base64
 from Crypto.Cipher import AES
-import base91
+import re
 
 data_b64 = ""
 key_b64 = ""
@@ -17,6 +17,15 @@ decrypted = cipher.decrypt(ciphertext)
 padding_len = decrypted[-1]
 decrypted = decrypted[:-padding_len]
 
-decoded = base91.decode(decrypted.decode('utf-8'))
+decoded_str = decrypted.decode('utf-8')
 
-print(decoded.decode('utf-8'))
+#Output still has atob
+match = re.search(r'atob\("([^"]+)"\)', decoded_str)
+if match:
+    inner_b64 = match.group(1)
+    inner_decoded = base64.b64decode(inner_b64)
+    print(inner_decoded.decode('utf-8'))
+else:
+    print(decoded_str)
+
+#final output is encoded by javascript obfuscator

